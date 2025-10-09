@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/contexts/UserContext";
-import { useForm, type RegisterOptions, type FieldValues, type SubmitErrorHandler, type SubmitHandler, type Path } from "react-hook-form";
+import { useForm, type FieldValues, type Path, type RegisterOptions, type SubmitErrorHandler, type SubmitHandler } from "react-hook-form";
+import { Navigate } from "react-router";
 
 type LoginForm = {
   username: string;
@@ -31,7 +32,15 @@ const validations: ValidationSchema<LoginForm> = {
 };
 
 export const Login = () => {
-  const { user, setUser } = useUser();
+  const {
+    user: { userId },
+    login,
+  } = useUser();
+
+  if (userId) {
+    return <Navigate to="app/home" />;
+  }
+
   const {
     register,
     handleSubmit,
@@ -44,7 +53,7 @@ export const Login = () => {
 
     // After authentication
     const userObj = { userId: username };
-    setUser(userObj);
+    login(userObj);
   };
 
   const onSubmitError: SubmitErrorHandler<LoginForm> = (errors) => {
@@ -52,7 +61,6 @@ export const Login = () => {
   };
   return (
     <div className="login-page h-[100%] flex flex-col items-center justify-center p-2">
-      <h1 className="text-5xl my-10">Math Party</h1>
       <form className="login-form mt-2 w-[80%] sm:w-[50%]" onSubmit={handleSubmit(onLoginSubmit, onSubmitError)}>
         <Input placeholder="Username" {...register("username", validations.username)} aria-invalid={errors.username ? "true" : "false"} />
         {errors.username && <div className="text-[10px] text-red-600 mt-1">{errors.username.message}</div>}

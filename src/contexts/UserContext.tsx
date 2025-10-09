@@ -6,7 +6,8 @@ type User = {
 
 type UserContextType = {
   user: User;
-  setUser: (user: User) => void;
+  login: (user: User) => void;
+  logout: () => void;
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -16,13 +17,22 @@ type UserContextProviderProps = {
   children: React.ReactNode;
 };
 
-const initialUser: User = {
-  userId: null,
-};
-
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
-  const [user, setUser] = useState<User>(initialUser);
-  return <Provider value={{ user, setUser }}>{children}</Provider>;
+  const [user, setUser] = useState<User>(() => {
+    const stored = localStorage.getItem("user");
+    return stored ? JSON.parse(stored) : { userId: null };
+  });
+
+  const login = (user: User) => {
+    setUser(user);
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
+  const logout = () => {
+    setUser({ userId: null });
+    localStorage.removeItem("user");
+  };
+  return <Provider value={{ user, login, logout }}>{children}</Provider>;
 };
 
 export const useUser = () => {
