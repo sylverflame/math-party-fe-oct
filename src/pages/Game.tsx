@@ -7,15 +7,13 @@ import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 
 type GameState = {
-  status: "NONE" | "CREATING_GAME" | "WAITING_TO_START" | "JOINING_GAME" | "GAME_STARTED";
-  current?: {
-    roomCode?: string;
-    // settings: any;
-    // isMultiplayer: boolean;
-    // isPrivateGame: boolean;
-    host?: string;
-    players?: any;
-  };
+  status: string;
+  roomCode?: string;
+  // settings: any;
+  // isMultiplayer: boolean;
+  // isPrivateGame: boolean;
+  host?: string;
+  players?: any;
 };
 
 const initialState: GameState = {
@@ -37,6 +35,9 @@ const Game = () => {
     socket.addEventListener("message", onMessage);
 
     return () => {
+      socket.removeEventListener("open", onSocketOpen);
+      socket.removeEventListener("close", onSocketClose);
+      socket.removeEventListener("message", onMessage);
       socket.close();
     };
   }, []);
@@ -81,29 +82,13 @@ const Game = () => {
     if (type === "ERROR") {
       toast.error(type, { description: payload.message });
     }
-    if (type === "GAME_CREATED" || type === "PLAYER_JOINED") {
+    if (type === "GAME_CREATED" || type === "PLAYER_JOINED" || type === "PLAYER_LEFT") {
       if (payload.message) {
         toast.success(type, {
           description: payload.message,
         });
       }
-      setGameState((prev) => ({
-        ...prev,
-        status: "WAITING_TO_START",
-        current: payload.gameState,
-      }));
-    }
-
-    if (type === "PLAYER_LEFT") {
-      if (payload.message) {
-        toast.error(type, {
-          description: payload.message,
-        });
-      }
-      setGameState((prev) => ({
-        ...prev,
-        current: payload.gameState,
-      }));
+      setGameState({ ...payload.gameState });
     }
   };
 
@@ -119,10 +104,10 @@ const Game = () => {
     return (
       <>
         <Label>Room Code</Label>
-        <div>{gameState.current?.roomCode}</div>
+        <div>{gameState.roomCode}</div>
         <div>
           <Label>Players</Label>
-          {gameState.current?.players.map((player: any) => {
+          {gameState.players.map((player: any) => {
             return (
               <div key={player.userId}>
                 {player.userId} - {player.totalScore}
