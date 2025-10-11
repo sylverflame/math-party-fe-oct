@@ -1,6 +1,6 @@
 import { useUser } from "@/contexts/UserContext";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import CreateGame from "./CreateGame";
 import JoinGame from "./JoinGame";
 import { toast } from "sonner";
@@ -28,8 +28,20 @@ const Game = () => {
   const [searchParams] = useSearchParams();
   const socket = useMemo(() => new WebSocket("ws://localhost:8080"), []);
   const { userId } = user;
+  const navigate = useNavigate();
 
   useEffect(() => {
+    initialize();
+    socket.addEventListener("open", onSocketOpen);
+    socket.addEventListener("close", onSocketClose);
+    socket.addEventListener("message", onMessage);
+
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  const initialize = () => {
     if (searchParams.get("type") === "create") {
       setGameState({
         ...gameState,
@@ -42,58 +54,58 @@ const Game = () => {
         status: "JOINING_GAME",
       });
     }
-    socket.addEventListener("open", () => {
-      socket.send(
-        JSON.stringify({
-          type: "AUTHENTICATE_USER",
-          payload: {
-            userId,
-            token: "abc",
-          },
-        })
-      );
+  };
+
+  const onSocketOpen = () => {
+    socket.send(
+      JSON.stringify({
+        type: "AUTHENTICATE_USER",
+        payload: {
+          userId,
+          token: "abc",
+        },
+      })
+    );
+  };
+
+  const onSocketClose = () => {
+    toast.error("ERROR", {
+      description: "Connection closed!",
     });
+    navigate("/app/home");
+  };
 
-    socket.addEventListener("close", () => {
-      console.log("Connection closed");
-    });
-
-    socket.addEventListener("message", (event) => {
-      const jsonData = JSON.parse(event.data);
-      const { type, payload } = jsonData;
-      if (type === "ERROR") {
-        toast.error(type, { description: payload.message });
+  const onMessage = (event: MessageEvent<any>) => {
+    const jsonData = JSON.parse(event.data);
+    const { type, payload } = jsonData;
+    if (type === "ERROR") {
+      toast.error(type, { description: payload.message });
+    }
+    if (type === "GAME_CREATED" || type === "PLAYER_JOINED") {
+      if (payload.message) {
+        toast.success(type, {
+          description: payload.message,
+        });
       }
-      if (type === "GAME_CREATED" || type === "PLAYER_JOINED") {
-        if (payload.message) {
-          toast.success(type, {
-            description: payload.message,
-          });
-        }
-        setGameState((prev) => ({
-          ...prev,
-          status: "WAITING_TO_START",
-          current: payload.gameState,
-        }));
-      }
+      setGameState((prev) => ({
+        ...prev,
+        status: "WAITING_TO_START",
+        current: payload.gameState,
+      }));
+    }
 
-      if (type === "PLAYER_LEFT") {
-        if (payload.message) {
-          toast.error(type, {
-            description: payload.message,
-          });
-        }
-        setGameState((prev) => ({
-          ...prev,
-          current: payload.gameState,
-        }));
+    if (type === "PLAYER_LEFT") {
+      if (payload.message) {
+        toast.error(type, {
+          description: payload.message,
+        });
       }
-    });
-
-    return () => {
-      socket.close();
-    };
-  }, []);
+      setGameState((prev) => ({
+        ...prev,
+        current: payload.gameState,
+      }));
+    }
+  };
 
   if (gameState.status === "CREATING_GAME") {
     return <CreateGame socket={socket} />;
