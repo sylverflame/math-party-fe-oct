@@ -13,7 +13,7 @@ const Header = () => {
     logout();
   };
   return (
-    <div className="header-component h-12 w-full bg-gray-800 shadow-md flex items-center justify-between px-2">
+    <div className="header-component h-12 w-full bg-zinc-950 shadow-md flex items-center justify-between px-2">
         <Button variant="outline" onClick={() => navigate("/app/home")}>Home</Button>
       <div className="flex items-center gap-2">
           <Avatar>
