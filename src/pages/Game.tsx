@@ -1,10 +1,12 @@
 import { useUser } from "@/contexts/UserContext";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import CreateGame from "./CreateGame";
-import JoinGame from "./JoinGame";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/label";
+import CreateGame from "./CreateGame";
+import GameRoom from "./GameRoom";
+import JoinGame from "./JoinGame";
+import type { GameRound } from "@/types";
+import { TimerContextProvider } from "@/contexts/TimerContext";
 
 type GameState = {
   status: string;
@@ -22,6 +24,8 @@ const initialState: GameState = {
 
 const Game = () => {
   const [gameState, setGameState] = useState<GameState>(initialState);
+  const [currentRound, setCurrentRound] = useState<GameRound | null>(null);
+  const [isPlayerGameOver, setIsPlayerGameOver] = useState(false);
   const { user } = useUser();
   const [searchParams] = useSearchParams();
   const socket = useMemo(() => new WebSocket("ws://localhost:8080"), []);
@@ -82,13 +86,22 @@ const Game = () => {
     if (type === "ERROR") {
       toast.error(type, { description: payload.message });
     }
-    if (type === "GAME_CREATED" || type === "PLAYER_JOINED" || type === "PLAYER_LEFT") {
+    const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "PLAYER_GAME_FINISED"];
+    if (allowedTypes.includes(type)) {
       if (payload.message) {
         toast.success(type, {
           description: payload.message,
         });
       }
-      setGameState({ ...payload.gameState });
+      if (payload.round) {
+        setCurrentRound(payload.round);
+      }
+      if (payload.gameState) {
+        setGameState({ ...payload.gameState });
+      }
+    }
+    if (type === "PLAYER_GAME_FINISHED") {
+      setIsPlayerGameOver(true);
     }
   };
 
@@ -100,22 +113,11 @@ const Game = () => {
     return <JoinGame socket={socket} />;
   }
 
-  if (gameState.status === "WAITING_TO_START" || gameState.status === "GAME_STARTED") {
+  if (gameState.status === "WAITING_TO_START" || gameState.status === "GAME_IN_PROGRESS") {
     return (
-      <>
-        <Label>Room Code</Label>
-        <div>{gameState.roomCode}</div>
-        <div>
-          <Label>Players</Label>
-          {gameState.players.map((player: any) => {
-            return (
-              <div key={player.userId}>
-                {player.userId} - {player.totalScore}
-              </div>
-            );
-          })}
-        </div>
-      </>
+      <TimerContextProvider>
+        <GameRoom socket={socket} gameState={gameState} setGameState={setGameState} currentRound={currentRound} isPlayerGameOver={isPlayerGameOver} />
+      </TimerContextProvider>
     );
   }
 };
