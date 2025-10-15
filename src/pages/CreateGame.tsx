@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import type { ClientMessageType } from "@/hooks/useWebsocket";
+import type { ClientMessageType } from "@/hooks/useWebSocket";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 type CreateGameForm = {
@@ -36,7 +36,7 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
     <div className="create-game-page p-4">
       <form onSubmit={handleSubmit(onCreateGame)}>
         <div>
-          <Label htmlFor="totalRounds">Total Rounds</Label>
+          <Label htmlFor="totalRounds">{"Total Rounds"}</Label>
           <select {...register("totalRounds")}>
             <option value={5}>5</option>
             <option value={10}>10</option>
@@ -44,7 +44,7 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
           </select>
         </div>
         <div>
-          <Label htmlFor="timePerRound">Time per Round</Label>
+          <Label htmlFor="timePerRound">{"Time per Round"}</Label>
           <select {...register("timePerRound")}>
             <option value={10}>10</option>
             <option value={20}>20</option>
@@ -52,19 +52,21 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
         </div>
 
         <div>
-          <Label htmlFor="difficulty">Difficulty</Label>
+          <Label htmlFor="difficulty">{"Difficulty"}</Label>
           <select {...register("difficulty")}>
-            <option value={"Easy"}>Easy</option>
-            <option value={"Medium"}>Medium</option>
+            <option value={"Easy"}>{"Easy"}</option>
+            <option value={"Medium"}>{"Medium"}</option>
+            <option value={"Hard"}>{"Hard"}</option>
+            <option value={"Crazy"}>{"Crazy"}</option>
           </select>
         </div>
         <div>
           <div className="flex items-center space-x-2">
             <Input type="checkbox" id="private-game" {...register("isPrivateGame")} />
-            <Label htmlFor="private-game">Private Game</Label>
+            <Label htmlFor="private-game">{"Private Game"}</Label>
           </div>
         </div>
-        <Button type="submit">Create Game</Button>
+        <Button type="submit">{"Create Game"}</Button>
       </form>
     </div>
   );

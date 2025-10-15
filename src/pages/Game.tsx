@@ -1,10 +1,8 @@
-import EBWrapper from "@/components/EBWrapper";
 import { TimerContextProvider } from "@/contexts/TimerContext";
-import { useUser } from "@/contexts/UserContext";
 import useWebSocket from "@/hooks/useWebSocket";
 import type { GameRound } from "@/types";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 import CreateGame from "./CreateGame";
 import GameRoom from "./GameRoom";
@@ -28,10 +26,7 @@ const Game = () => {
   const [gameState, setGameState] = useState<GameState>(initialState);
   const [currentRound, setCurrentRound] = useState<GameRound | null>(null);
   const [isPlayerGameOver, setIsPlayerGameOver] = useState(false);
-  const { user } = useUser();
   const [searchParams] = useSearchParams();
-  const { userId } = user;
-  const navigate = useNavigate();
 
   useEffect(() => {
     initialize();
@@ -50,20 +45,6 @@ const Game = () => {
         status: "JOINING_GAME",
       });
     }
-  };
-
-  const onSocketOpen = () => {
-    sendMessage("AUTHENTICATE_USER", {
-      userId,
-      token: "abc",
-    });
-  };
-
-  const onSocketClose = () => {
-    toast.error("ERROR", {
-      description: "Connection closed!",
-    });
-    navigate("/app/home");
   };
 
   const onMessage = (event: MessageEvent<any>) => {
@@ -90,7 +71,7 @@ const Game = () => {
       setIsPlayerGameOver(true);
     }
   };
-  const { sendMessage } = useWebSocket("ws://localhost:8080", onMessage, onSocketOpen, onSocketClose);
+  const { sendMessage } = useWebSocket("ws://localhost:8080", onMessage);
 
   if (gameState.status === "CREATING_GAME") {
     return <CreateGame sendMessage={sendMessage} />;

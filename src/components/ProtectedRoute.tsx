@@ -9,11 +9,11 @@ const ProtectedRoute = ({ element }: ProtectRouteProps) => {
   const {
     user: { userId },
   } = useUser();
-  console.log(userId);
 
   if (!userId) {
     return <Navigate to="/" />;
   }
+  console.log("Authenticated user -", userId);
   return element;
 };
 
