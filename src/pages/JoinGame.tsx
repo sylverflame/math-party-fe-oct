@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { ClientMessageType } from "@/hooks/useWebsocket";
+import type { ClientMessageType } from "@/hooks/useWebSocket";
 import { useState } from "react";
 
 type JoinGameProps = {

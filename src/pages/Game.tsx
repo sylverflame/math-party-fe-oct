@@ -1,6 +1,6 @@
 import { TimerContextProvider } from "@/contexts/TimerContext";
 import { useUser } from "@/contexts/UserContext";
-import useWebSocket from "@/hooks/useWebsocket";
+import useWebSocket from "@/hooks/useWebSocket";
 import type { GameRound } from "@/types";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";

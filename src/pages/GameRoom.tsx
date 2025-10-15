@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTimerContext } from "@/contexts/TimerContext";
 import { useUser } from "@/contexts/UserContext";
-import type { ClientMessageType } from "@/hooks/useWebsocket";
+import type { ClientMessageType } from "@/hooks/useWebSocket";
 import type { GameRound } from "@/types";
 import { useState } from "react";
 
