@@ -65,7 +65,7 @@ const GameRoom = ({ socket, gameState, currentRound, isPlayerGameOver }: GameRoo
           return (
             <div key={player.userId}>
               {player.userId}
-              {player.userId === gameState.host && <span>{" (Host)"}</span>} - {player.totalScore}
+              {player.userId === gameState.host && <span className="inline-flex text-green-600 rounded border-1 border-green-600 px-1 font text-[8px] align-middle mx-0.5">{"Host"}</span>} - {player.totalScore}
             </div>
           );
         })}

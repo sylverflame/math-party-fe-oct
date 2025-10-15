@@ -38,7 +38,7 @@ const CreateGame = ({ socket }: CreateGameProps) => {
   };
 
   return (
-    <div className="create-game-page">
+    <div className="create-game-page p-4">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <Label htmlFor="totalRounds">Total Rounds</Label>
