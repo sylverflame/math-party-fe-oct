@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { ClientMessageType } from "@/hooks/useWebsocket";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 type CreateGameForm = {
@@ -12,34 +13,28 @@ type CreateGameForm = {
 };
 
 type CreateGameProps = {
-  socket: WebSocket;
+  sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
 };
 
-const CreateGame = ({ socket }: CreateGameProps) => {
+const CreateGame = ({ sendMessage }: CreateGameProps) => {
   const { register, handleSubmit } = useForm<CreateGameForm>();
 
-  const onSubmit: SubmitHandler<CreateGameForm> = (data) => {
+  const onCreateGame: SubmitHandler<CreateGameForm> = (data) => {
     const { totalRounds, timePerRound, difficulty, isPrivateGame } = data;
-
-    socket.send(
-      JSON.stringify({
-        type: "CREATE_GAME",
-        payload: {
-          settings: {
-            totalRounds,
-            timePerRound,
-            isMultiplayer: true,
-            isPrivateGame,
-            difficulty,
-          },
-        },
-      })
-    );
+    sendMessage("CREATE_GAME", {
+      settings: {
+        totalRounds,
+        timePerRound,
+        isMultiplayer: true,
+        isPrivateGame,
+        difficulty,
+      },
+    });
   };
 
   return (
     <div className="create-game-page p-4">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onCreateGame)}>
         <div>
           <Label htmlFor="totalRounds">Total Rounds</Label>
           <select {...register("totalRounds")}>
@@ -75,5 +70,4 @@ const CreateGame = ({ socket }: CreateGameProps) => {
   );
 };
 
-
-export default CreateGame
+export default CreateGame;

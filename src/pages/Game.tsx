@@ -7,6 +7,7 @@ import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
 import type { GameRound } from "@/types";
 import { TimerContextProvider } from "@/contexts/TimerContext";
+import useWebSocket from "@/hooks/useWebsocket";
 
 type GameState = {
   status: string;
@@ -28,22 +29,11 @@ const Game = () => {
   const [isPlayerGameOver, setIsPlayerGameOver] = useState(false);
   const { user } = useUser();
   const [searchParams] = useSearchParams();
-  const socket = useMemo(() => new WebSocket("ws://localhost:8080"), []);
   const { userId } = user;
   const navigate = useNavigate();
 
   useEffect(() => {
     initialize();
-    socket.addEventListener("open", onSocketOpen);
-    socket.addEventListener("close", onSocketClose);
-    socket.addEventListener("message", onMessage);
-
-    return () => {
-      socket.removeEventListener("open", onSocketOpen);
-      socket.removeEventListener("close", onSocketClose);
-      socket.removeEventListener("message", onMessage);
-      socket.close();
-    };
   }, []);
 
   const initialize = () => {
@@ -62,15 +52,10 @@ const Game = () => {
   };
 
   const onSocketOpen = () => {
-    socket.send(
-      JSON.stringify({
-        type: "AUTHENTICATE_USER",
-        payload: {
-          userId,
-          token: "abc",
-        },
-      })
-    );
+    sendMessage("AUTHENTICATE_USER", {
+      userId,
+      token: "abc",
+    });
   };
 
   const onSocketClose = () => {
@@ -104,19 +89,20 @@ const Game = () => {
       setIsPlayerGameOver(true);
     }
   };
+  const { sendMessage } = useWebSocket("ws://localhost:8080", onMessage, onSocketOpen, onSocketClose);
 
   if (gameState.status === "CREATING_GAME") {
-    return <CreateGame socket={socket} />;
+    return <CreateGame sendMessage={sendMessage} />;
   }
 
   if (gameState.status === "JOINING_GAME") {
-    return <JoinGame socket={socket} />;
+    return <JoinGame sendMessage={sendMessage} />;
   }
 
   if (gameState.status === "WAITING_TO_START" || gameState.status === "GAME_IN_PROGRESS") {
     return (
       <TimerContextProvider>
-        <GameRoom socket={socket} gameState={gameState} setGameState={setGameState} currentRound={currentRound} isPlayerGameOver={isPlayerGameOver} />
+        <GameRoom sendMessage={sendMessage} gameState={gameState} setGameState={setGameState} currentRound={currentRound} isPlayerGameOver={isPlayerGameOver} />
       </TimerContextProvider>
     );
   }

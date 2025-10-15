@@ -4,15 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTimerContext } from "@/contexts/TimerContext";
 import { useUser } from "@/contexts/UserContext";
+import type { ClientMessageType } from "@/hooks/useWebsocket";
 import type { GameRound } from "@/types";
 import { useState } from "react";
 
 type GameRoomProps = {
-  socket: WebSocket;
+  sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
   gameState: any;
   setGameState: any;
   currentRound: GameRound | null;
-  isPlayerGameOver: boolean
+  isPlayerGameOver: boolean;
 };
 
 const operators = {
@@ -22,7 +23,7 @@ const operators = {
   Divide: "/",
 };
 
-const GameRoom = ({ socket, gameState, currentRound, isPlayerGameOver }: GameRoomProps) => {
+const GameRoom = ({ sendMessage, gameState, currentRound, isPlayerGameOver }: GameRoomProps) => {
   const {
     user: { userId },
   } = useUser();
@@ -31,29 +32,19 @@ const GameRoom = ({ socket, gameState, currentRound, isPlayerGameOver }: GameRoo
   const [answerField, setAnswerField] = useState("");
 
   const onClickGameStart = () => {
-    socket.send(
-      JSON.stringify({
-        type: "START_GAME",
-        payload: {
-          roomCode: gameState.roomCode,
-        },
-      })
-    );
+    sendMessage("START_GAME", {
+      roomCode: gameState.roomCode,
+    });
   };
 
   const onSolutionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setAnswerField("");
-    socket.send(
-      JSON.stringify({
-        type: "SOLUTION_SUBMIT",
-        payload: {
-          roomCode: gameState.roomCode,
-          round: currentRound?.roundNumber,
-          score: elapsedTime,
-        },
-      })
-    );
+    sendMessage("SOLUTION_SUBMIT", {
+      roomCode: gameState.roomCode,
+      round: currentRound?.roundNumber,
+      score: elapsedTime,
+    });
   };
   return (
     <>
@@ -65,7 +56,8 @@ const GameRoom = ({ socket, gameState, currentRound, isPlayerGameOver }: GameRoo
           return (
             <div key={player.userId}>
               {player.userId}
-              {player.userId === gameState.host && <span className="inline-flex text-green-600 rounded border-1 border-green-600 px-1 font text-[8px] align-middle mx-0.5">{"Host"}</span>} - {player.totalScore}
+              {player.userId === gameState.host && <span className="inline-flex text-green-600 rounded border-1 border-green-600 px-1 font text-[8px] align-middle mx-0.5">{"Host"}</span>} -{" "}
+              {player.totalScore}
             </div>
           );
         })}
