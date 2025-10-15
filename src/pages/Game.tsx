@@ -1,3 +1,4 @@
+import EBWrapper from "@/components/EBWrapper";
 import { TimerContextProvider } from "@/contexts/TimerContext";
 import { useUser } from "@/contexts/UserContext";
 import useWebSocket from "@/hooks/useWebSocket";

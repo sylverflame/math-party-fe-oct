@@ -5,7 +5,8 @@ import { Navigate, Route, Routes } from "react-router";
 import AppLayout from "./layouts/AppLayout";
 import Game from "./pages/Game";
 import Home from "./pages/Home";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
+import EBWrapper from "./components/EBWrapper";
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         <Route index element={<Login />} />
         <Route path="app" element={<AppLayout />}>
           <Route path="home" element={<ProtectedRoute element={<Home />} />} />
-          <Route path="game" element={<ProtectedRoute element={<Game />} />} />
+          <Route path="game" element={<ProtectedRoute element={<EBWrapper component={Game} />} />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
