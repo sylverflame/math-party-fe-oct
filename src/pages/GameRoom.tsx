@@ -46,10 +46,15 @@ const GameRoom = ({ sendMessage, gameState, currentRound, isPlayerGameOver }: Ga
       score: elapsedTime,
     });
   };
+
+  // TODO: Copy room code
+  const copyRoomCode = () => {};
   return (
-    <>
-      <Label>{"Room Code"}</Label>
-      <div>{gameState.roomCode}</div>
+    <div>
+      <h6 className="text-2xl font-bold mb-2">{"Room Code"}</h6>
+      <div className="text-violet-700 border-1 rounded-3xl border-violet-700 flex justify-center text-8xl p-10 cursor-pointer" onClick={copyRoomCode}>
+        {gameState.roomCode}
+      </div>
       <div>
         <Label>{"Players"}</Label>
         {gameState.players.map((player: any) => {
@@ -73,7 +78,7 @@ const GameRoom = ({ sendMessage, gameState, currentRound, isPlayerGameOver }: Ga
           </form>
         </>
       )}
-    </>
+    </div>
   );
 };
 

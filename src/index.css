@@ -10,6 +10,7 @@
   justify-content: center;
   -webkit-user-select: none;
   user-select: none;
+  background-color: var(--root-bg);
 }
 
 @theme inline {
@@ -83,6 +84,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Custom Variables */
+  --header-bg: oklch(0.145 0 0);
+  --root-bg: #000;
+  --shadow: 0px 2px 2px hsla(0, 0%, 0%, 0.5), 0px 4px 4px hsla(0, 0%, 0%, 0.15);
 }
 
 .dark {
@@ -118,12 +123,38 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+/* 
+:root {
+  --radius: 0.625rem;
+  --bg-dark: hsl(0, 0%, 0%);
+  --bg: hsl(0, 0%, 5%);
+  --bg-light: hsl(0, 0%, 20%);
+  --text: hsl(0, 0%, 95%);
+  --text-muted: hsl(0, 0%, 70%);
+  --border: hsl(0, 0%, 30%);
+  --border-top: hsl(0, 0%, 70%);
+  --gradient: linear-gradient(0deg, var(--bg), var(--bg-light));
+  --primary: hsl(174, 100%, 30%);
+  --primary-muted: hsl(174, 100%, 5%);
+}
+
+.light {
+  --bg-dark: hsl(0, 0%, 90%);
+  --bg: hsl(0, 0%, 95%);
+  --bg-light: hsl(0, 0%, 100%);
+  --text: hsl(0, 0%, 5%);
+  --text-muted: hsl(0, 0%, 30%);
+  --border: var(--bg);
+  --border-top: var(--bg-light);
+  --gradient: linear-gradient(0deg, var(--bg-dark), var(--bg-light));
+  --shadow: 0px 2px 2px hsla(0, 0%, 0%, 0.5), 0px 4px 4px hsla(0, 0%, 0%, 0.15);
+} */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
 }

@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -33,9 +32,10 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
   };
 
   return (
-    <div className="create-game-page p-4">
-      <form onSubmit={handleSubmit(onCreateGame)}>
-        <div>
+    <div className="create-game-page px-10 py-4 flex justify-center bg-card mt-4 w-full">
+      <form className="w-[250px]"onSubmit={handleSubmit(onCreateGame)}>
+        <h6 className="text-2xl font-bold mb-2 text-card-foreground">{"Create Game"}</h6>
+        <div className="flex gap-2 justify-between py-1 text-muted-foreground">
           <Label htmlFor="totalRounds">{"Total Rounds"}</Label>
           <select {...register("totalRounds")}>
             <option value={5}>5</option>
@@ -43,7 +43,7 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
             <option value={20}>20</option>
           </select>
         </div>
-        <div>
+        <div className="flex gap-2 justify-between py-1 text-muted-foreground">
           <Label htmlFor="timePerRound">{"Time per Round"}</Label>
           <select {...register("timePerRound")}>
             <option value={10}>10</option>
@@ -51,7 +51,7 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
           </select>
         </div>
 
-        <div>
+        <div className="flex gap-2 justify-between py-1 text-muted-foreground">
           <Label htmlFor="difficulty">{"Difficulty"}</Label>
           <select {...register("difficulty")}>
             <option value={"Easy"}>{"Easy"}</option>
@@ -60,13 +60,11 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
             <option value={"Crazy"}>{"Crazy"}</option>
           </select>
         </div>
-        <div>
-          <div className="flex items-center space-x-2">
-            <Input type="checkbox" id="private-game" {...register("isPrivateGame")} />
+        <div className="flex gap-2 justify-between py-2 text-muted-foreground">
             <Label htmlFor="private-game">{"Private Game"}</Label>
-          </div>
+            <input className="scale-120 cursor-pointer" type="checkbox" id="private-game" {...register("isPrivateGame")} />
         </div>
-        <Button type="submit">{"Create Game"}</Button>
+        <Button type="submit" className="mt-6">{"Create Game"}</Button>
       </form>
     </div>
   );

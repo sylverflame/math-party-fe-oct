@@ -19,7 +19,7 @@ const JoinGame = ({ sendMessage }: JoinGameProps) => {
     <div className="join-game">
       <form onSubmit={(e) => onJoinGame(e)}>
         <Input placeholder="Room Code" onChange={(e) => setRoomCode(e.target.value)} />
-        <Button type="submit">Join Game</Button>
+        <Button type="submit" className="mt-4">Join Game</Button>
       </form>
     </div>
   );

@@ -60,20 +60,20 @@ export const Login = () => {
     console.log(errors);
   };
   return (
-    <div className="login-page h-[100%] flex flex-col items-center justify-center p-2">
-      <form className="login-form mt-2 w-[80%] sm:w-[50%]" onSubmit={handleSubmit(onLoginSubmit, onSubmitError)}>
+    <div className="login-page h-[100%] flex flex-col items-center justify-center p-6">
+      <form className="login-form mt-2" onSubmit={handleSubmit(onLoginSubmit, onSubmitError)}>
         <Input placeholder="Username" {...register("username", validations.username)} aria-invalid={errors.username ? "true" : "false"} />
         {errors.username && <div className="text-[10px] text-red-600 mt-1">{errors.username.message}</div>}
         <Input placeholder="Password" type="password" className="mt-2" {...register("password", validations.password)} aria-invalid={errors.password ? "true" : "false"} />
         {errors.password && <div className="text-[10px] text-red-600 mt-1">{errors.password.message}</div>}
         <Button type={"submit"} className="mt-2 ">
-          Login
+          {"Login"}
         </Button>
       </form>
-      <hr className="w-[50%] my-5" />
+      <hr className="w-[100%] my-5" />
       <Button variant="outline" className="flex items-center gap-2">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
-        <span>Sign in with Google</span>
+        <span>{"Sign in with Google"}</span>
       </Button>
     </div>
   );
