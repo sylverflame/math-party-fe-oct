@@ -61,13 +61,13 @@ export const Login = () => {
     console.log(errors);
   };
   return (
-    <div className="login-page h-[100%] flex flex-col items-center justify-center p-6">
+    <div className="login-page h-[100%] flex flex-col items-center justify-center p-6 w-full">
       <Logo />
-      <form className="login-form mt-2" onSubmit={handleSubmit(onLoginSubmit, onSubmitError)}>
-        <Input placeholder="Username" {...register("username", validations.username)} aria-invalid={errors.username ? "true" : "false"} />
-        {errors.username && <div className="text-[10px] text-red-600 mt-1">{errors.username.message}</div>}
+      <form className="login-form mt-2 w-[50%] min-w-[300px]" onSubmit={handleSubmit(onLoginSubmit, onSubmitError)}>
+        <Input placeholder="Username" className="w-full" {...register("username", validations.username)} aria-invalid={errors.username ? "true" : "false"} />
+        {errors.username && <div className="text-[10px] text-red-600 mt-1 w-full">{errors.username.message}</div>}
         <Input placeholder="Password" type="password" className="mt-2" {...register("password", validations.password)} aria-invalid={errors.password ? "true" : "false"} />
-        {errors.password && <div className="text-[10px] text-red-600 mt-1">{errors.password.message}</div>}
+        {errors.password && <div className="text-[10px] text-red-600 mt-1 w-full">{errors.password.message}</div>}
         <Button type={"submit"} className="mt-2 ">
           {"Login"}
         </Button>

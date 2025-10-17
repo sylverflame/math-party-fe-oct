@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className="home-page p-4 flex flex-col justify-center gap-2">
       <Logo></Logo>
-      <Button variant={"secondary"} className="" onClick={() => navigate("/app/game?type=create")}>{"Create New Game"}</Button>
+      <Button onClick={() => navigate("/app/game?type=create")}>{"Create New Game"}</Button>
       <Button onClick={() => navigate("/app/game?type=join")}>{"Join Game"}</Button>
     </div>
   );
