@@ -16,7 +16,7 @@ const JoinGame = ({ sendMessage }: JoinGameProps) => {
     });
   };
   return (
-    <form onSubmit={(e) => onJoinGame(e)}>
+    <form onSubmit={(e) => onJoinGame(e)} className="fade-in">
       <Input placeholder="Room Code" onChange={(e) => setRoomCode(e.target.value)} />
       <Button type="submit" className="mt-4">
         Join Game

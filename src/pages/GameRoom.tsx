@@ -52,7 +52,7 @@ const GameRoom = ({ sendMessage, gameState, currentRound, isPlayerGameOver }: Ga
   // const copyRoomCode = () => {};
   return (
     <>
-      <div className="w-[100%] lg:w-[60%] border h-full rounded-2xl flex flex-col items-center p-4">
+      <div className="w-[100%] lg:w-[60%] border h-full rounded-2xl flex flex-col items-center p-4 fade-in">
         {gameState.status === "GAME_IN_PROGRESS" && currentRound && !isPlayerGameOver && (
           <>
             <Timer className="font-bold text-lg text-card-foreground self-center"/>

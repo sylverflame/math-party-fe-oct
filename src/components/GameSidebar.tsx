@@ -6,7 +6,7 @@ interface IGameSidebar {
 
 const GameSidebar = ({ gameState }: IGameSidebar) => {
   return (
-    <div className="hidden lg:block game-sidebar w-[40%] p-4 transition-all">
+    <div className="hidden lg:block game-sidebar w-[40%] p-4 transition-all fade-in">
       <h6 className="text-card-foreground font-bold mb-2">{"Room Code"}</h6>
       <div className="text-muted-foreground border-2 rounded-xl border-border text-2xl p-2 cursor-pointer flex justify-center">{gameState.roomCode}</div>
       <Tabs defaultValue="players" className="mt-4">

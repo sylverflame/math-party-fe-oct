@@ -32,7 +32,7 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
   };
 
   return (
-      <form className="w-[250px]"onSubmit={handleSubmit(onCreateGame)}>
+      <form className="w-[250px] fade-in"onSubmit={handleSubmit(onCreateGame)}>
         <h6 className="text-xl font-bold mb-2 text-card-foreground">{"Create Game"}</h6>
         <div className="flex gap-2 justify-between py-1 text-muted-foreground">
           <Label htmlFor="totalRounds">{"Total Rounds"}</Label>
