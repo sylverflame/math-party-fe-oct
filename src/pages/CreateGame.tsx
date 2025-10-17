@@ -32,9 +32,8 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
   };
 
   return (
-    <div className="create-game-page px-10 py-4 flex justify-center bg-card mt-4 w-full">
       <form className="w-[250px]"onSubmit={handleSubmit(onCreateGame)}>
-        <h6 className="text-2xl font-bold mb-2 text-card-foreground">{"Create Game"}</h6>
+        <h6 className="text-xl font-bold mb-2 text-card-foreground">{"Create Game"}</h6>
         <div className="flex gap-2 justify-between py-1 text-muted-foreground">
           <Label htmlFor="totalRounds">{"Total Rounds"}</Label>
           <select {...register("totalRounds")}>
@@ -66,7 +65,6 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
         </div>
         <Button type="submit" className="mt-6">{"Create Game"}</Button>
       </form>
-    </div>
   );
 };
 

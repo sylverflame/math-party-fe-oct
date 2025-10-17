@@ -1,4 +1,5 @@
 import { useTimer } from "@/hooks/useTimer";
+import { memo } from "react";
 
 type TimerProps = {
   className?: string;
@@ -22,7 +23,7 @@ export const getFormattedTime = (time: number): string => {
   return timeFormatted;
 };
 
-export const Timer = ({ className }: TimerProps): React.ReactNode => {
+export const Timer = memo(({ className }: TimerProps): React.ReactNode => {
   const { elapsedTime } = useTimer();
   return <h6 className={className}>{getFormattedTime(elapsedTime)}</h6>;
-};
+});

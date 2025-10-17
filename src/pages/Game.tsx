@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import CreateGame from "./CreateGame";
 import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
+import GameContainer from "@/components/GameContainer";
 
 type GameState = {
   status: string;
@@ -74,18 +75,28 @@ const Game = () => {
   const { sendMessage } = useWebSocket("ws://localhost:8080", onMessage);
 
   if (gameState.status === "CREATING_GAME") {
-    return <CreateGame sendMessage={sendMessage} />;
+    return (
+      <GameContainer>
+        <CreateGame sendMessage={sendMessage} />
+      </GameContainer>
+    );
   }
 
   if (gameState.status === "JOINING_GAME") {
-    return <JoinGame sendMessage={sendMessage} />;
+    return (
+      <GameContainer>
+        <JoinGame sendMessage={sendMessage} />
+      </GameContainer>
+    );
   }
 
   if (gameState.status === "WAITING_TO_START" || gameState.status === "GAME_IN_PROGRESS") {
     return (
-      <TimerContextProvider>
-        <GameRoom sendMessage={sendMessage} gameState={gameState} setGameState={setGameState} currentRound={currentRound} isPlayerGameOver={isPlayerGameOver} />
-      </TimerContextProvider>
+      <GameContainer>
+        <TimerContextProvider>
+          <GameRoom sendMessage={sendMessage} gameState={gameState} setGameState={setGameState} currentRound={currentRound} isPlayerGameOver={isPlayerGameOver} />
+        </TimerContextProvider>
+      </GameContainer>
     );
   }
 };

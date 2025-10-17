@@ -1,13 +1,16 @@
 import "@/App.css";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { Toaster } from "@/components/ui/sonner";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Login } from "@/pages/Login";
 import { Navigate, Route, Routes } from "react-router";
-import EBWrapper from "./components/EBWrapper";
-import { useTheme } from "@/contexts/ThemeContext";
+import EBW from "./components/EBWrapper";
+import SW from "./components/SuspenseWrapper";
 import AppLayout from "./layouts/AppLayout";
-import Game from "./pages/Game";
-import Home from "./pages/Home";
+import { lazy } from "react";
+
+  const Game = lazy(() => import("./pages/Game"));
+  const Home = lazy(() => import("./pages/Home"));
 
 function App() {
   const { isDarkMode } = useTheme();
@@ -16,8 +19,8 @@ function App() {
       <Routes>
         <Route index element={<Login />} />
         <Route path="app" element={<ProtectedRoute element={<AppLayout />} />}>
-          <Route path="home" element={<Home />} />
-          <Route path="game" element={<EBWrapper component={Game} />} />
+          <Route path="home" element={<EBW children={<SW component={Home} />} />} />
+          <Route path="game" element={<EBW children={<SW component={Game} />} />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
