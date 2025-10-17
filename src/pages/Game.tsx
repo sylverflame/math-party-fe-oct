@@ -1,33 +1,18 @@
+import GameContainer from "@/components/GameContainer";
+import GameSidebar from "@/components/GameSidebar";
+import { useGame, type Chat } from "@/contexts/GameContext";
 import { TimerContextProvider } from "@/contexts/TimerContext";
 import useWebSocket from "@/hooks/useWebSocket";
-import type { GameRound } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 import CreateGame from "./CreateGame";
 import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
-import GameContainer from "@/components/GameContainer";
-
-type GameState = {
-  status: string;
-  roomCode?: string;
-  // settings: any;
-  // isMultiplayer: boolean;
-  // isPrivateGame: boolean;
-  host?: string;
-  players?: any;
-};
-
-const initialState: GameState = {
-  status: "NONE",
-};
 
 const Game = () => {
-  const [gameState, setGameState] = useState<GameState>(initialState);
-  const [currentRound, setCurrentRound] = useState<GameRound | null>(null);
-  const [isPlayerGameOver, setIsPlayerGameOver] = useState(false);
   const [searchParams] = useSearchParams();
+  const { setGameState, setChats, setCurrentRound, setIsPlayerGameOver, gameState } = useGame();
 
   useEffect(() => {
     initialize();
@@ -35,17 +20,26 @@ const Game = () => {
 
   const initialize = () => {
     if (searchParams.get("type") === "create") {
-      setGameState({
-        ...gameState,
+      setGameState((prev) => ({
+        ...prev,
         status: "CREATING_GAME",
-      });
+      }));
     }
     if (searchParams.get("type") === "join") {
-      setGameState({
-        ...gameState,
+      setGameState((prev) => ({
+        ...prev,
         status: "JOINING_GAME",
-      });
+      }));
     }
+  };
+
+  const updateChat = (type: any, payload: any) => {
+    const newChatItem: Chat = {
+      type: type === "MESSAGE" ? "MESSAGE" : "EVENT",
+      content: payload.message,
+      userId: payload.userId,
+    };
+    setChats((prev) => [...prev, newChatItem]);
   };
 
   const onMessage = (event: MessageEvent<any>) => {
@@ -67,6 +61,7 @@ const Game = () => {
       if (payload.gameState) {
         setGameState({ ...payload.gameState });
       }
+      updateChat(type, payload);
     }
     if (type === "PLAYER_GAME_FINISHED") {
       setIsPlayerGameOver(true);
@@ -94,7 +89,8 @@ const Game = () => {
     return (
       <GameContainer>
         <TimerContextProvider>
-          <GameRoom sendMessage={sendMessage} gameState={gameState} setGameState={setGameState} currentRound={currentRound} isPlayerGameOver={isPlayerGameOver} />
+          <GameRoom sendMessage={sendMessage} />
+          <GameSidebar sendMessage={sendMessage} />
         </TimerContextProvider>
       </GameContainer>
     );

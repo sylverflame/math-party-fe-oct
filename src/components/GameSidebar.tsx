@@ -1,12 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useGame } from "@/contexts/GameContext";
+import type { ClientMessageType } from "@/hooks/useWebSocket";
+import Chatroom from "./Chatroom";
 
 interface IGameSidebar {
-  gameState: any;
+  sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
 }
 
-const GameSidebar = ({ gameState }: IGameSidebar) => {
+const GameSidebar = ({ sendMessage }: IGameSidebar) => {
+  const { gameState, chats } = useGame();
   return (
-    <div className="hidden lg:block game-sidebar w-[40%] p-4 transition-all fade-in">
+    <div className="lg:block game-sidebar w-[40%] p-4 transition-all fade-in">
       <h6 className="text-card-foreground font-bold mb-2">{"Room Code"}</h6>
       <div className="text-muted-foreground border-2 rounded-xl border-border text-2xl p-2 cursor-pointer flex justify-center">{gameState.roomCode}</div>
       <Tabs defaultValue="players" className="mt-4">
@@ -29,7 +33,9 @@ const GameSidebar = ({ gameState }: IGameSidebar) => {
             );
           })}
         </TabsContent>
-        <TabsContent value="chat">Change your password here.</TabsContent>
+        <TabsContent value="chat">
+          <Chatroom chats={chats} sendMessage={sendMessage} />
+        </TabsContent>
       </Tabs>
     </div>
   );

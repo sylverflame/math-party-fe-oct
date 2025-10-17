@@ -3,14 +3,14 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import { Toaster } from "@/components/ui/sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Login } from "@/pages/Login";
+import { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import EBW from "./components/EBWrapper";
+import GameWithProviders from "./components/GameWithProviders";
 import SW from "./components/SuspenseWrapper";
 import AppLayout from "./layouts/AppLayout";
-import { lazy } from "react";
 
-  const Game = lazy(() => import("./pages/Game"));
-  const Home = lazy(() => import("./pages/Home"));
+const Home = lazy(() => import("./pages/Home"));
 
 function App() {
   const { isDarkMode } = useTheme();
@@ -20,7 +20,7 @@ function App() {
         <Route index element={<Login />} />
         <Route path="app" element={<ProtectedRoute element={<AppLayout />} />}>
           <Route path="home" element={<EBW children={<SW component={Home} />} />} />
-          <Route path="game" element={<EBW children={<SW component={Game} />} />} />
+          <Route path="game" element={<GameWithProviders />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
