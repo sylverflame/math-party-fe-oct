@@ -71,7 +71,7 @@ const Game = () => {
       setIsPlayerGameOver(true);
     }
   };
-  const { sendMessage } = useWebSocket("ws://localhost:8080", onMessage);
+  const { sendMessage } = useWebSocket(import.meta.env.VITE_WS_SERVER, onMessage);
 
   if (gameState.status === "CREATING_GAME") {
     return (
