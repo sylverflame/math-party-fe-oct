@@ -1,3 +1,4 @@
+import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@/contexts/UserContext";
@@ -61,6 +62,7 @@ export const Login = () => {
   };
   return (
     <div className="login-page h-[100%] flex flex-col items-center justify-center p-6">
+      <Logo />
       <form className="login-form mt-2" onSubmit={handleSubmit(onLoginSubmit, onSubmitError)}>
         <Input placeholder="Username" {...register("username", validations.username)} aria-invalid={errors.username ? "true" : "false"} />
         {errors.username && <div className="text-[10px] text-red-600 mt-1">{errors.username.message}</div>}
