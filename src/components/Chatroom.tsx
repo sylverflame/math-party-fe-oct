@@ -1,27 +1,29 @@
+import { useGame } from "@/contexts/GameContext";
 import { useUser } from "@/contexts/UserContext";
+import type { ClientMessageType } from "@/hooks/useWebSocket";
 import cn from "classnames";
 import { useState } from "react";
 import { Input } from "./ui/input";
-import type { ClientMessageType } from "@/hooks/useWebSocket";
-import type { Chat } from "@/contexts/GameContext";
 
 interface IChatroom {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
-  chats: Chat[];
 }
 
-const Chatroom = ({ sendMessage, chats }: IChatroom) => {
+const Chatroom = ({ sendMessage }: IChatroom) => {
   const [chatInput, setChatInput] = useState("");
   const {
     user: { userId: loggedUser },
   } = useUser();
+  const { gameState, chats } = useGame();
+  const { roomCode } = gameState;
 
   const onChatSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setChatInput("");
     if (!chatInput) {
       return;
     }
-    sendMessage("SEND_CHAT_MESSAGE", { message: chatInput, roomCode: "ABCDE" });
+    sendMessage("SEND_CHAT_MESSAGE", { message: chatInput, roomCode });
   };
 
   return (
@@ -35,9 +37,14 @@ const Chatroom = ({ sendMessage, chats }: IChatroom) => {
           if (chat.type === "MESSAGE") {
             return (
               <div
-                className={cn("message text-white text-[10px] border p-3 rounded-2xl my-2", { "bg-green-800 self-end": loggedUser === userId }, { "bg-blue-800 self-start": loggedUser !== userId })}
+                className={cn(
+                  "message text-white border px-2 py-1 rounded-lg my-2 flex flex-col",
+                  { "bg-green-800 self-end": loggedUser === userId },
+                  { "bg-blue-800 self-start": loggedUser !== userId }
+                )}
               >
-                {chat.content}
+                <div className="text-[10px] font-bold self-end">{chat.userId}</div>
+                <div className="text-[12px] ">{chat.content}</div>
               </div>
             );
           }

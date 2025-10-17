@@ -8,15 +8,15 @@ interface IGameSidebar {
 }
 
 const GameSidebar = ({ sendMessage }: IGameSidebar) => {
-  const { gameState, chats } = useGame();
+  const { gameState } = useGame();
   return (
-    <div className="lg:block game-sidebar w-[40%] p-4 transition-all fade-in">
+    <div className="lg:block game-sidebar w-[40%] transition-all fade-in">
       <h6 className="text-card-foreground font-bold mb-2">{"Room Code"}</h6>
       <div className="text-muted-foreground border-2 rounded-xl border-border text-2xl p-2 cursor-pointer flex justify-center">{gameState.roomCode}</div>
       <Tabs defaultValue="players" className="mt-4">
         <TabsList>
-          <TabsTrigger value="players">Players</TabsTrigger>
-          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="players">{"Players"}</TabsTrigger>
+          <TabsTrigger value="chat">{"Chat"}</TabsTrigger>
         </TabsList>
         <TabsContent value="players">
           {gameState.players.map((player: any) => {
@@ -34,7 +34,7 @@ const GameSidebar = ({ sendMessage }: IGameSidebar) => {
           })}
         </TabsContent>
         <TabsContent value="chat">
-          <Chatroom chats={chats} sendMessage={sendMessage} />
+          <Chatroom  sendMessage={sendMessage} />
         </TabsContent>
       </Tabs>
     </div>

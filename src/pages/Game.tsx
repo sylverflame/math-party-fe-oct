@@ -35,7 +35,7 @@ const Game = () => {
 
   const updateChat = (type: any, payload: any) => {
     const newChatItem: Chat = {
-      type: type === "MESSAGE" ? "MESSAGE" : "EVENT",
+      type: type === "CHAT_MESSAGE" ? "MESSAGE" : "EVENT",
       content: payload.message,
       userId: payload.userId,
     };
@@ -63,6 +63,10 @@ const Game = () => {
       }
       updateChat(type, payload);
     }
+    if (type === "CHAT_MESSAGE") {
+      updateChat(type, payload);
+    }
+
     if (type === "PLAYER_GAME_FINISHED") {
       setIsPlayerGameOver(true);
     }
