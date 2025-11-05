@@ -1,12 +1,12 @@
-import type { Chat } from "@/pages/Game";
-import { createContext } from "react";
+// import type { Chat } from "@/pages/Game";
+// import { createContext } from "react";
 
-type ChatContextType = {
-  chats: Chat[];
-  addChat: () => void;
-};
+// type ChatContextType = {
+//   chats: Chat[];
+//   addChat: () => void;
+// };
 
-const ChatContext = createContext<ChatContextType | null>(null);
+// const ChatContext = createContext<ChatContextType | null>(null);
 
-// TODO: Not sure if chat context is needed
-const ChatContextProvider = () => {};
+// // TODO: Not sure if chat context is needed
+// const ChatContextProvider = () => {};
