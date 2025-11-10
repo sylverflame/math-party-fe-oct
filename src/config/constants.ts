@@ -1,0 +1,1 @@
+export const DISPLAY_CHAT_ITEMS = -30;

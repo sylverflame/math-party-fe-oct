@@ -4,6 +4,7 @@ import type { ClientMessageType } from "@/hooks/useWebSocket";
 import cn from "classnames";
 import { useState } from "react";
 import { Input } from "./ui/input";
+import { DISPLAY_CHAT_ITEMS } from "@/config/constants";
 
 interface IChatroom {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
@@ -28,8 +29,8 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
 
   return (
     <div className="chatroom bg-muted text-card-foreground border rounded px-2 py-1">
-      <div className="messages-container h-[300px] overflow-y-auto flex flex-col">
-        {chats.map((chat) => {
+      <div className="messages-container h-[300px] overflow-y-auto flex flex-col" style={{ scrollbarWidth: "thin", scrollbarColor: "var(--muted-foreground) var(--muted)"}}>
+        {chats.slice(DISPLAY_CHAT_ITEMS).map((chat) => {
           const { userId, content } = chat;
           if (!content) {
             return;
@@ -38,7 +39,7 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
             return (
               <div
                 className={cn(
-                  "message text-white border px-2 py-1 rounded-lg my-2 flex flex-col",
+                  "message fade-in text-white border px-2 py-1 rounded-lg my-2 flex flex-col",
                   { "bg-green-800 self-end": loggedUser === userId },
                   { "bg-blue-800 self-start": loggedUser !== userId }
                 )}
