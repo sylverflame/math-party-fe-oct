@@ -48,7 +48,7 @@ const Game = () => {
     if (type === "ERROR") {
       toast.error(type, { description: payload.message });
     }
-    const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "PLAYER_GAME_FINISED"];
+    const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "PLAYER_GAME_FINISED", "GAME_OVER", "GAME_RESTARTED"];
     if (allowedTypes.includes(type)) {
       if (payload.message) {
         toast.success(type, {
@@ -70,6 +70,10 @@ const Game = () => {
     if (type === "PLAYER_GAME_FINISHED") {
       setIsPlayerGameOver(true);
     }
+
+    if (type === "GAME_RESTARTED") {
+      setIsPlayerGameOver(false);
+    }
   };
   const { sendMessage } = useWebSocket(import.meta.env.VITE_WS_SERVER, onMessage);
 
@@ -89,7 +93,7 @@ const Game = () => {
     );
   }
 
-  if (gameState.status === "WAITING_TO_START" || gameState.status === "GAME_IN_PROGRESS") {
+  if (gameState.status === "WAITING_TO_START" || gameState.status === "GAME_IN_PROGRESS" || gameState.status === "GAME_OVER") {
     return (
       <GameContainer>
         <TimerContextProvider>
