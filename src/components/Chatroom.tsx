@@ -51,7 +51,7 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
             );
           }
           if (chat.type === "EVENT") {
-            return <div className="event text-muted-foreground text-[10px] uppercase my-1">{chat.content}</div>;
+            return <div className="event text-muted-foreground text-[10px] uppercase my-1" key={index}>{chat.content}</div>;
           }
         })}
       </div>
