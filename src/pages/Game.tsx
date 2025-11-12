@@ -52,7 +52,7 @@ const Game = () => {
     const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "PLAYER_GAME_FINISED", "GAME_OVER", "GAME_RESTARTED"];
     if (allowedTypes.includes(type)) {
       if (payload.message) {
-        toast.success(type, {
+        toast.success("", {
           description: payload.message,
         });
       }
@@ -99,8 +99,8 @@ const Game = () => {
       <GameContainer>
         <TimerContextProvider>
           <CountdownContextProvider>
-            <GameRoom sendMessage={sendMessage} />
             <GameSidebar sendMessage={sendMessage} />
+            <GameRoom sendMessage={sendMessage} />
           </CountdownContextProvider>
         </TimerContextProvider>
       </GameContainer>
