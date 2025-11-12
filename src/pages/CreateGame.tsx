@@ -45,6 +45,7 @@ const CreateGame = ({ sendMessage }: CreateGameProps) => {
         <div className="flex gap-2 justify-between py-1 text-muted-foreground">
           <Label htmlFor="timePerRound">{"Time per Round"}</Label>
           <select {...register("timePerRound")}>
+            <option value={5}>5</option>
             <option value={10}>10</option>
             <option value={20}>20</option>
           </select>
