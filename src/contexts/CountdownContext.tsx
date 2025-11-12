@@ -15,7 +15,7 @@ export const CountdownContextProvider = ({ children }: { children: React.ReactNo
 export const useCountdownContext = () => {
   const context = useContext(CountdownContext);
   if (!context) {
-    throw new Error("Countdown context can only be accessed inside a Game context provider");
+    throw new Error("Countdown context can only be accessed inside a Countdown context provider");
   }
 
   return context;
