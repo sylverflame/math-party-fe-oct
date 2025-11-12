@@ -30,7 +30,7 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
   return (
     <div className="chatroom bg-muted text-card-foreground border rounded px-2 py-1">
       <div className="messages-container h-[300px] overflow-y-auto flex flex-col" style={{ scrollbarWidth: "thin", scrollbarColor: "var(--muted-foreground) var(--muted)"}}>
-        {chats.slice(DISPLAY_CHAT_ITEMS).map((chat) => {
+        {chats.slice(DISPLAY_CHAT_ITEMS).map((chat, index) => {
           const { userId, content } = chat;
           if (!content) {
             return;
@@ -43,6 +43,7 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
                   { "bg-green-800 self-end": loggedUser === userId },
                   { "bg-blue-800 self-start": loggedUser !== userId }
                 )}
+                key={index}
               >
                 <div className="text-[10px] font-bold self-end">{chat.userId}</div>
                 <div className="text-[12px] ">{chat.content}</div>

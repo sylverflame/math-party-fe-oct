@@ -6,6 +6,7 @@ type GameState = {
   roomCode?: string;
   host?: string;
   players?: any;
+  timePerRound?: any;
 };
 
 const initialState: GameState = {

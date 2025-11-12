@@ -1,12 +1,12 @@
-import { Timer } from "@/components/Timer";
+import CountdownTimer from "@/components/CountdownTimer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useCountdownContext } from "@/contexts/CountdownContext";
 import { useGame } from "@/contexts/GameContext";
-import { useTimerContext } from "@/contexts/TimerContext";
 import { useUser } from "@/contexts/UserContext";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
 import type { Operator } from "@/types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type GameRoomProps = {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
@@ -24,8 +24,9 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
     user: { userId },
   } = useUser();
   const { gameState, currentRound, isPlayerGameOver } = useGame();
-  const { elapsedTimeInContext: elapsedTime } = useTimerContext();
+  const { countdownTimeInContext: countdownTime } = useCountdownContext();
   const [answerField, setAnswerField] = useState("");
+  const countDownRef = useRef(0);
 
   const onClickGameStart = () => {
     sendMessage("START_GAME", {
@@ -36,6 +37,14 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
     sendMessage("RESTART_GAME", {
       roomCode: gameState.roomCode,
     });
+  };
+
+  const onTimedout = () => {
+    sendMessage("NO_ANSWER", {
+      roomCode: gameState.roomCode,
+      round: currentRound?.roundNumber,
+    });
+    countDownRef.current += 1;
   };
 
   const getSolution = (firstNumber: number, secondNumber: number, operator: Operator): number | null => {
@@ -64,6 +73,9 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
 
   const onSolutionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!answerField) {
+      return;
+    }
     setAnswerField("");
     if (!isSolutionValid(answerField)) {
       sendMessage("PENALTY", {
@@ -74,8 +86,9 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
     sendMessage("SOLUTION_SUBMIT", {
       roomCode: gameState.roomCode,
       round: currentRound?.roundNumber,
-      score: elapsedTime,
+      elapsedTime: gameState.timePerRound * 1000 - countdownTime!, // Pass the elaspsed time in the round
     });
+    countDownRef.current += 1;
   };
 
   // TODO: Copy room code
@@ -84,23 +97,23 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
     <div className="w-[100%] lg:w-[60%] border h-full rounded-lg flex flex-col items-center p-4 fade-in">
       {gameState.status === "GAME_IN_PROGRESS" && currentRound && !isPlayerGameOver && (
         <>
-          <div className="w-full flex justify-between font-bold text-lg text-card-foreground">
+          <div className="w-full flex justify-between font-bold text-lg text-card-foreground relative">
             <div>
-              Current Round <span className="bg-accent px-3 py-1 rounded-4xl">{gameState.players.find((player: any) => player.userId === userId).currentRound}</span>
+              Round <span className="bg-accent px-3 py-1 rounded-4xl">{gameState.players.find((player: any) => player.userId === userId).currentRound}</span>
             </div>
-            <Timer className="font-bold text-lg text-card-foreground self-center" />
             <div>
-              Penalties <span className="bg-red-600 px-3 py-1 rounded-4xl">{gameState.players.find((player: any) => player.userId === userId).penalties}</span>
+              Penalties <span className="bg-red-300 px-3 py-1 rounded-4xl dark:bg-red-800">{gameState.players.find((player: any) => player.userId === userId).penalties}</span>
             </div>
           </div>
-          <form className="expression-container flex flex-col items-center" onSubmit={onSolutionSubmit}>
+          <form className="expression-container flex flex-col items-center relative" onSubmit={onSolutionSubmit}>
             <div className="expression text-card-foreground text-6xl font-extrabold my-8">{`${currentRound.firstNumber} ${operators[currentRound.operator]} ${currentRound.secondNumber}`}</div>
             <div className="flex items-center rounded-lg overflow-hidden border">
-              <Input className="border-none rounded-[0px]" type="number" name="solution-field" id="solution-field" value={answerField} onChange={(e) => setAnswerField(e.target.value)} />
+              <Input autoFocus className="border-none rounded-[0px]" type="number" name="solution-field" id="solution-field" value={answerField} onChange={(e) => setAnswerField(e.target.value)} />
               <Button type="submit" className="text-2xl font-extrabold rounded-none">
                 {"→"}
               </Button>
             </div>
+            <CountdownTimer className="absolute -bottom-2 left-0" startTime={gameState.timePerRound} key={countDownRef.current} onTimedout={onTimedout} />
           </form>
         </>
       )}

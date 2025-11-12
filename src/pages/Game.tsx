@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import CreateGame from "./CreateGame";
 import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
+import { CountdownContextProvider } from "@/contexts/CountdownContext";
 
 const Game = () => {
   const [searchParams] = useSearchParams();
@@ -97,8 +98,10 @@ const Game = () => {
     return (
       <GameContainer>
         <TimerContextProvider>
-          <GameRoom sendMessage={sendMessage} />
-          <GameSidebar sendMessage={sendMessage} />
+          <CountdownContextProvider>
+            <GameRoom sendMessage={sendMessage} />
+            <GameSidebar sendMessage={sendMessage} />
+          </CountdownContextProvider>
         </TimerContextProvider>
       </GameContainer>
     );
