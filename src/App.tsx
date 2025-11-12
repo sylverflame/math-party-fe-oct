@@ -24,7 +24,7 @@ function App() {
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
-      <Toaster position="top-center" richColors />
+      <Toaster position="top-center" richColors duration={1200}/>
     </div>
   );
 }

@@ -92,8 +92,6 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
     countDownRef.current += 1;
   };
 
-  // TODO: Copy room code
-  // const copyRoomCode = () => {};
   return (
     <div className="w-[100%] md:w-[60%] lg:w-[70%] border h-full rounded-lg flex flex-col items-center p-4 fade-in">
       {gameState.status === "GAME_IN_PROGRESS" && currentRound && !isPlayerGameOver && (
