@@ -1,6 +1,7 @@
 import CountdownTimer from "@/components/CountdownTimer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import WaitingScreen from "@/components/WaitingScreen";
 import { useCountdownContext } from "@/contexts/CountdownContext";
 import { useGame } from "@/contexts/GameContext";
 import { useUser } from "@/contexts/UserContext";
@@ -106,7 +107,9 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
             </div>
           </div>
           <form className="expression-container flex flex-col items-center relative" onSubmit={onSolutionSubmit}>
-            <div className="expression text-card-foreground text-6xl font-extrabold my-8">{`${currentRound.firstNumber} ${operators[currentRound.operator]} ${currentRound.secondNumber}`}</div>
+            <div className="expression text-card-foreground text-[calc(2rem+3vw)] font-extrabold my-8">{`${currentRound.firstNumber} ${operators[currentRound.operator]} ${
+              currentRound.secondNumber
+            }`}</div>
             <div className="flex items-center rounded-lg overflow-hidden border">
               <Input autoFocus className="border-none rounded-[0px]" type="number" name="solution-field" id="solution-field" value={answerField} onChange={(e) => setAnswerField(e.target.value)} />
               <Button type="submit" className="text-2xl font-extrabold rounded-none">
@@ -118,18 +121,16 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
         </>
       )}
       {gameState.status === "WAITING_TO_START" && (
-        <>
-          <div className="text-3xl my-4 text-muted-foreground h-[50%]">{"Waiting for host to start"}</div>
-          {userId === gameState.host && <Button onClick={onClickGameStart}>{"Start Game"}</Button>}
-        </>
+        <WaitingScreen title={"Game Starting"} description={"Waiting for host to start."} content={userId === gameState.host && <Button onClick={onClickGameStart}>{"Start Game"}</Button>} />
       )}
       {gameState.status === "GAME_OVER" && (
-        <>
-          <div className="text-3xl my-4 text-muted-foreground h-[50%]">{"Waiting for host to restart the game"}</div>
-          {userId === gameState.host && <Button onClick={onClickGameRestart}>{"Restart Game"}</Button>}
-        </>
+        <WaitingScreen
+          title={"Game about to Start"}
+          description={"Waiting for host to restart the game."}
+          content={userId === gameState.host && <Button onClick={onClickGameRestart}>{"Restart Game"}</Button>}
+        />
       )}
-      {gameState.status !== "GAME_OVER" && isPlayerGameOver && <div className="text-3xl my-4 text-muted-foreground h-[50%]">{"Waiting for other players to finish"}</div>}
+      {gameState.status !== "GAME_OVER" && isPlayerGameOver && <WaitingScreen title={"Game in Progress"} description={"Waiting for other players to finish."} />}
     </div>
   );
 };
