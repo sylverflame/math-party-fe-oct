@@ -3,7 +3,35 @@
   animation: fadeIn 0.2s ease-in forwards;
 }
 
+.fall-in-1s {
+  opacity: 0;
+  animation: fallIn 0.2s ease-in forwards;
+  animation-delay: 0.5s;
+}
+
+.fall-in-2s {
+  opacity: 0;
+  animation: fallIn 0.2s ease-in forwards;
+  animation-delay: 1s;
+}
+
+
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fallIn {
+  from {
+    scale: 3;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+  }
 }

@@ -7,6 +7,7 @@ type GameState = {
   host?: string;
   players?: any;
   timePerRound?: any;
+  results?: any;
 };
 
 const initialState: GameState = {
