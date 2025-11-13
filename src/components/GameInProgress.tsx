@@ -73,6 +73,7 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
     return true;
   };
 
+  // Submit answer when enter is pressed
   const onSolutionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     inputRef.current?.focus();
@@ -91,6 +92,20 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
       round: currentRound?.roundNumber,
       elapsedTime: gameState.timePerRound * 1000 - countdownTime!, // Pass the elaspsed time in the round
     });
+  };
+
+  // Submit answer without pressing enter
+  const onChangeAnswerField = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setAnswerField(e.target.value);
+    if (isSolutionValid(e.target.value)) {
+      sendMessage("SOLUTION_SUBMIT", {
+        roomCode: gameState.roomCode,
+        round: currentRound?.roundNumber,
+        elapsedTime: gameState.timePerRound * 1000 - countdownTime!, // Pass the elaspsed time in the round
+      });
+      setAnswerField("");
+    }
   };
 
   if (!currentRound) {
@@ -119,7 +134,7 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
             name="solution-field"
             id="solution-field"
             value={answerField}
-            onChange={(e) => setAnswerField(e.target.value)}
+            onChange={onChangeAnswerField}
           />
           <Button type="submit" className="text-2xl font-extrabold rounded-none">
             {"→"}
