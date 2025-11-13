@@ -1,0 +1,10 @@
+# robots.txt — standard configuration
+
+User-agent: *
+Disallow:
+
+# Allow everything by default.
+# To block specific folders, uncomment and adjust:
+# Disallow: /admin/
+# Disallow: /api/
+
