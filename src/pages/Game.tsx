@@ -43,13 +43,14 @@ const Game = () => {
   };
 
   const updateChat = (type: any, payload: any) => {
+    const isMessage = type === "CHAT_MESSAGE"
     const newChatItem: Chat = {
-      type: type === "CHAT_MESSAGE" ? "MESSAGE" : "EVENT",
+      type: isMessage ? "MESSAGE" : "EVENT",
       content: payload.message,
       userId: payload.userId,
     };
     setChats((prev) => [...prev, newChatItem]);
-    if (newChatItem.type === "MESSAGE" && newChatItem.userId !== loggedUserId) {
+    if (isMessage && newChatItem.userId !== loggedUserId) {
       setShowNewChatIndicator(true);
     }
   };
