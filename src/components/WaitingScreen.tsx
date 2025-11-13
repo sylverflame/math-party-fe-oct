@@ -21,8 +21,8 @@ export function WaitingScreen({ title, description, content, showSpinner = false
         <EmptyDescription>{description}</EmptyDescription>
       </EmptyHeader>
       {content &&
-        content.map((element) => {
-          return element && <EmptyContent>{element}</EmptyContent>;
+        content.map((element, index) => {
+          return element && <EmptyContent key={index}>{element}</EmptyContent>;
         })}
     </Empty>
   );

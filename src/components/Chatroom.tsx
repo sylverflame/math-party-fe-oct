@@ -5,6 +5,7 @@ import cn from "classnames";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { DISPLAY_CHAT_ITEMS } from "@/config/constants";
+import { useChat } from "@/contexts/ChatContext";
 
 interface IChatroom {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
@@ -15,7 +16,8 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
   const {
     user: { userId: loggedUser },
   } = useUser();
-  const { gameState, chats } = useGame();
+  const { gameState } = useGame();
+  const { chats } = useChat();
   const { roomCode } = gameState;
 
   const onChatSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,7 +31,7 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
 
   return (
     <div className="chatroom bg-muted text-card-foreground border rounded px-2 py-1">
-      <div className="messages-container h-[300px] overflow-y-auto flex flex-col" style={{ scrollbarWidth: "thin", scrollbarColor: "var(--muted-foreground) var(--muted)"}}>
+      <div className="messages-container h-[300px] overflow-y-auto flex flex-col" style={{ scrollbarWidth: "thin", scrollbarColor: "var(--muted-foreground) var(--muted)" }}>
         {chats.slice(DISPLAY_CHAT_ITEMS).map((chat, index) => {
           const { userId, content } = chat;
           if (!content) {
@@ -51,7 +53,11 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
             );
           }
           if (chat.type === "EVENT") {
-            return <div className="event text-muted-foreground text-[10px] uppercase my-1" key={index}>{chat.content}</div>;
+            return (
+              <div className="event text-muted-foreground text-[10px] uppercase my-1" key={index}>
+                {chat.content}
+              </div>
+            );
           }
         })}
       </div>

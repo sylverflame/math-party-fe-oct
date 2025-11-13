@@ -1,6 +1,6 @@
 import GameContainer from "@/components/GameContainer";
 import GameSidebar from "@/components/GameSidebar";
-import { useGame, type Chat } from "@/contexts/GameContext";
+import { useGame } from "@/contexts/GameContext";
 import { TimerContextProvider } from "@/contexts/TimerContext";
 import useWebSocket from "@/hooks/useWebSocket";
 import { useEffect } from "react";
@@ -10,10 +10,16 @@ import CreateGame from "./CreateGame";
 import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
 import { CountdownContextProvider } from "@/contexts/CountdownContext";
+import { useChat, type Chat } from "@/contexts/ChatContext";
+import { useUser } from "@/contexts/UserContext";
 
 const Game = () => {
   const [searchParams] = useSearchParams();
-  const { setGameState, setChats, setCurrentRound, setIsPlayerGameOver, gameState } = useGame();
+  const { setGameState, setCurrentRound, setIsPlayerGameOver, gameState } = useGame();
+  const { setChats, setShowNewChatIndicator } = useChat();
+  const {
+    user: { userId: loggedUserId },
+  } = useUser();
 
   useEffect(() => {
     initialize();
@@ -41,6 +47,9 @@ const Game = () => {
       userId: payload.userId,
     };
     setChats((prev) => [...prev, newChatItem]);
+    if (newChatItem.type === "MESSAGE" && newChatItem.userId !== loggedUserId) {
+      setShowNewChatIndicator(true);
+    }
   };
 
   const onMessage = (event: MessageEvent<any>) => {
