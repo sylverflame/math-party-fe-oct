@@ -32,7 +32,7 @@ const validations: ValidationSchema<LoginForm> = {
   },
 };
 
-export const Login = () => {
+ const Login = () => {
   const {
     user: { userId },
     login,
@@ -80,3 +80,5 @@ export const Login = () => {
     </div>
   );
 };
+
+export default Login;
