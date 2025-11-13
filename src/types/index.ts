@@ -8,3 +8,9 @@ export type GameRound = {
   operator: Operator;
   solution?: number;
 };
+
+const events = {
+  NEXT_ROUND_RECIEVED: "NEXT_ROUND_RECIEVED",
+} as const;
+
+export type AppEvent = (typeof events)[keyof typeof events];

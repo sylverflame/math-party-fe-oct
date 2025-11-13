@@ -12,6 +12,8 @@ import JoinGame from "./JoinGame";
 import { CountdownContextProvider } from "@/contexts/CountdownContext";
 import { useChat, type Chat } from "@/contexts/ChatContext";
 import { useUser } from "@/contexts/UserContext";
+import { eventEmitter } from "@/main";
+import { AppEvents } from "@/types/events";
 
 const Game = () => {
   const [searchParams] = useSearchParams();
@@ -55,10 +57,14 @@ const Game = () => {
   const onMessage = (event: MessageEvent<any>) => {
     const jsonData = JSON.parse(event.data);
     const { type, payload } = jsonData;
-    if (type === "ERROR") {
-      toast.error(type, { description: payload.message });
+    if (type === "ERROR") return toast.error(type, { description: payload.message });
+    if (type === "CHAT_MESSAGE") return updateChat(type, payload);
+    if (type === "PLAYER_GAME_FINISHED") return setIsPlayerGameOver(true);
+    if (type === "GAME_RESTARTED") {
+      setIsPlayerGameOver(false);
     }
-    const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "PLAYER_GAME_FINISED", "GAME_OVER", "GAME_RESTARTED"];
+
+    const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "GAME_OVER", "GAME_RESTARTED"];
     if (allowedTypes.includes(type)) {
       if (payload.message) {
         toast.success("", {
@@ -67,22 +73,12 @@ const Game = () => {
       }
       if (payload.round) {
         setCurrentRound(payload.round);
+        eventEmitter.emit(AppEvents.NEXT_ROUND_RECIEVED);
       }
       if (payload.gameState) {
         setGameState({ ...payload.gameState });
       }
       updateChat(type, payload);
-    }
-    if (type === "CHAT_MESSAGE") {
-      updateChat(type, payload);
-    }
-
-    if (type === "PLAYER_GAME_FINISHED") {
-      setIsPlayerGameOver(true);
-    }
-
-    if (type === "GAME_RESTARTED") {
-      setIsPlayerGameOver(false);
     }
   };
   const { sendMessage } = useWebSocket(import.meta.env.VITE_WS_SERVER, onMessage);

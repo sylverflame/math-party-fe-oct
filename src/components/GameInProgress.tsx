@@ -3,10 +3,12 @@ import { useUser } from "@/contexts/UserContext";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import CountdownTimer from "./CountdownTimer";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
 import { useCountdownContext } from "@/contexts/CountdownContext";
 import type { Operator } from "@/types";
+import { eventEmitter } from "@/main";
+import { AppEvents } from "@/types/events";
 
 interface IGameInProgress {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
@@ -24,16 +26,27 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
   const {
     user: { userId },
   } = useUser();
+  const { countdownTimeInContext: countdownTime } = useCountdownContext();
   const [answerField, setAnswerField] = useState("");
   const countDownRef = useRef(0);
-  const { countdownTimeInContext: countdownTime } = useCountdownContext();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    eventEmitter.on(AppEvents.NEXT_ROUND_RECIEVED, () => {
+      countDownRef.current += 1;
+    });
+
+    return () => {
+      eventEmitter.removeListener(AppEvents.NEXT_ROUND_RECIEVED);
+    };
+  }, []);
 
   const onTimedout = () => {
     sendMessage("NO_ANSWER", {
       roomCode: gameState.roomCode,
       round: currentRound?.roundNumber,
     });
-    countDownRef.current += 1;
+    setAnswerField("");
   };
 
   const getSolution = (firstNumber: number, secondNumber: number, operator: Operator): number | null => {
@@ -62,6 +75,7 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
 
   const onSolutionSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    inputRef.current?.focus();
     if (!answerField) {
       return;
     }
@@ -77,7 +91,6 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
       round: currentRound?.roundNumber,
       elapsedTime: gameState.timePerRound * 1000 - countdownTime!, // Pass the elaspsed time in the round
     });
-    countDownRef.current += 1;
   };
 
   if (!currentRound) {
@@ -97,8 +110,17 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
         <div className="expression text-card-foreground text-[calc(2rem+3vw)] font-extrabold my-8">{`${currentRound.firstNumber} ${operators[currentRound.operator]} ${
           currentRound.secondNumber
         }`}</div>
-        <div className="flex items-center rounded-lg overflow-hidden border">
-          <Input autoFocus className="border-none rounded-[0px]" type="number" name="solution-field" id="solution-field" value={answerField} onChange={(e) => setAnswerField(e.target.value)} />
+        <div className="flex items-center rounded-lg overflow-hidden border w-full">
+          <Input
+            autoFocus
+            ref={inputRef}
+            className="border-none rounded-[0px]"
+            type="number"
+            name="solution-field"
+            id="solution-field"
+            value={answerField}
+            onChange={(e) => setAnswerField(e.target.value)}
+          />
           <Button type="submit" className="text-2xl font-extrabold rounded-none">
             {"→"}
           </Button>
