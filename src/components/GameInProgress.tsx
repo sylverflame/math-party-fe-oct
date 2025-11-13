@@ -1,25 +1,19 @@
+import { useCountdownContext } from "@/contexts/CountdownContext";
 import { useGame } from "@/contexts/GameContext";
 import { useUser } from "@/contexts/UserContext";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import CountdownTimer from "./CountdownTimer";
-import { useEffect, useRef, useState } from "react";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
-import { useCountdownContext } from "@/contexts/CountdownContext";
-import type { Operator } from "@/types";
+import { getSolution } from "@/lib/utils";
 import { eventEmitter } from "@/main";
 import { AppEvents } from "@/types/events";
+import { useEffect, useRef, useState } from "react";
+import CountdownTimer from "./CountdownTimer";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { OPERATORS } from "@/config/constants";
 
 interface IGameInProgress {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
 }
-
-const operators = {
-  Add: "+",
-  Subtract: "-",
-  Multiply: "x",
-  Divide: "/",
-};
 
 const GameInProgress = ({ sendMessage }: IGameInProgress) => {
   const { gameState, currentRound } = useGame();
@@ -47,21 +41,6 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
       round: currentRound?.roundNumber,
     });
     setAnswerField("");
-  };
-
-  const getSolution = (firstNumber: number, secondNumber: number, operator: Operator): number | null => {
-    switch (operator) {
-      case "Add":
-        return firstNumber + secondNumber;
-      case "Subtract":
-        return firstNumber - secondNumber;
-      case "Divide":
-        return firstNumber / secondNumber;
-      case "Multiply":
-        return firstNumber * secondNumber;
-      default:
-        return null;
-    }
   };
 
   const isSolutionValid = (answer: string): boolean => {
@@ -122,20 +101,11 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
         </div>
       </div>
       <form className="expression-container flex flex-col items-center relative" onSubmit={onSolutionSubmit}>
-        <div className="expression text-card-foreground text-[calc(2rem+3vw)] font-extrabold my-8">{`${currentRound.firstNumber} ${operators[currentRound.operator]} ${
+        <div className="expression text-card-foreground text-[calc(2rem+3vw)] font-extrabold my-8">{`${currentRound.firstNumber} ${OPERATORS[currentRound.operator]} ${
           currentRound.secondNumber
         }`}</div>
         <div className="flex items-center rounded-lg overflow-hidden border w-full">
-          <Input
-            autoFocus
-            ref={inputRef}
-            className="border-none rounded-[0px]"
-            type="number"
-            name="solution-field"
-            id="solution-field"
-            value={answerField}
-            onChange={onChangeAnswerField}
-          />
+          <Input autoFocus ref={inputRef} className="border-none rounded-[0px]" type="number" name="solution-field" id="solution-field" value={answerField} onChange={onChangeAnswerField} />
           <Button type="submit" className="text-2xl font-extrabold rounded-none">
             {"→"}
           </Button>
