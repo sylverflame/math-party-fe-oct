@@ -1,7 +1,10 @@
 import GameContainer from "@/components/GameContainer";
 import GameSidebar from "@/components/GameSidebar";
+import { useChat, type Chat } from "@/contexts/ChatContext";
+import { useCountdownContext } from "@/contexts/CountdownContext";
 import { useGame } from "@/contexts/GameContext";
 import { TimerContextProvider } from "@/contexts/TimerContext";
+import { useUser } from "@/contexts/UserContext";
 import useWebSocket from "@/hooks/useWebSocket";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router";
@@ -9,16 +12,12 @@ import { toast } from "sonner";
 import CreateGame from "./CreateGame";
 import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
-import { CountdownContextProvider } from "@/contexts/CountdownContext";
-import { useChat, type Chat } from "@/contexts/ChatContext";
-import { useUser } from "@/contexts/UserContext";
-import { eventEmitter } from "@/main";
-import { AppEvents } from "@/types/events";
 
 const Game = () => {
   const [searchParams] = useSearchParams();
   const { setGameState, setCurrentRound, setIsPlayerGameOver, gameState } = useGame();
   const { setChats, setShowNewChatIndicator } = useChat();
+  const { setShowCountdownTimer: showTimer } = useCountdownContext();
   const {
     user: { userId: loggedUserId },
   } = useUser();
@@ -74,7 +73,7 @@ const Game = () => {
       }
       if (payload.round) {
         setCurrentRound(payload.round);
-        eventEmitter.emit(AppEvents.NEXT_ROUND_RECIEVED);
+        showTimer(true)
       }
       if (payload.gameState) {
         setGameState({ ...payload.gameState });
@@ -104,10 +103,8 @@ const Game = () => {
     return (
       <GameContainer>
         <TimerContextProvider>
-          <CountdownContextProvider>
             <GameSidebar sendMessage={sendMessage} />
             <GameRoom sendMessage={sendMessage} />
-          </CountdownContextProvider>
         </TimerContextProvider>
       </GameContainer>
     );

@@ -3,6 +3,7 @@ import EBWrapper from "./EBWrapper";
 import SuspenseWrapper from "./SuspenseWrapper";
 import { lazy } from "react";
 import { ChatContextProvider } from "@/contexts/ChatContext";
+import { CountdownContextProvider } from "@/contexts/CountdownContext";
 const Game = lazy(() => import("@/pages/Game"));
 const GameWithProviders = () => {
   return (
@@ -13,7 +14,9 @@ const GameWithProviders = () => {
             <GameContextProvider
               children={
                 <ChatContextProvider>
-                  <Game />
+                  <CountdownContextProvider>
+                    <Game />
+                  </CountdownContextProvider>
                 </ChatContextProvider>
               }
             />
