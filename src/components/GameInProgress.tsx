@@ -3,7 +3,7 @@ import { useCountdownContext } from "@/contexts/CountdownContext";
 import { useGame } from "@/contexts/GameContext";
 import { useUser } from "@/contexts/UserContext";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
-import { getSolution } from "@/lib/utils";
+import { animate, getSolution } from "@/lib/utils";
 import { useRef, useState } from "react";
 import CountdownTimer from "./CountdownTimer";
 import { Button } from "./ui/button";
@@ -22,6 +22,7 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
   const { countdownTimeInContext: countdownTime, showCountdownTimer: showTimer, setShowCountdownTimer: setShowTimer } = useCountdownContext();
   const [answerField, setAnswerField] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const penaltiesRef = useRef<HTMLDivElement>(null);
 
   const onTimedout = () => {
     if (!showTimer) return;
@@ -31,6 +32,7 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
     });
     setAnswerField("");
     setShowTimer(false);
+    animate(penaltiesRef, "fall-in")
   };
 
   const isSolutionValid = (answer: string): boolean => {
@@ -55,6 +57,7 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
       sendMessage("PENALTY", {
         roomCode: gameState.roomCode,
       });
+      animate(penaltiesRef, "fall-in")
       return;
     }
     sendMessage("SOLUTION_SUBMIT", {
@@ -89,11 +92,11 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
   return (
     <>
       <div className="w-full flex justify-between font-bold text-lg text-card-foreground relative">
-        <div>
-          Round <span className="bg-accent px-3 py-1 rounded-4xl">{gameState.players.find((player: any) => player.userId === userId).currentRound}</span>
+        <div className="flex gap-2 items-center">
+          Round <div className="bg-accent size-10 rounded-full flex items-center justify-center">{gameState.players.find((player: any) => player.userId === userId).currentRound}</div>
         </div>
-        <div>
-          Penalties <span className="bg-red-300 px-3 py-1 rounded-4xl dark:bg-red-800">{gameState.players.find((player: any) => player.userId === userId).penalties}</span>
+        <div className="flex gap-2 items-center">
+          Penalties <div ref={penaltiesRef} className="bg-red-300 dark:bg-red-800 size-10 rounded-full flex items-center justify-center">{gameState.players.find((player: any) => player.userId === userId).penalties}</div>
         </div>
       </div>
       <form className="expression-container flex flex-col items-center relative" onSubmit={onSolutionSubmit}>

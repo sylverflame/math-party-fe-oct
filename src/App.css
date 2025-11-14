@@ -3,6 +3,10 @@
   animation: fadeIn 0.2s ease-in forwards;
 }
 
+.fall-in {
+  animation: fallInFullOpacity 0.2s ease-in;
+}
+
 .fall-in-1s {
   opacity: 0;
   animation: fallIn 0.2s ease-in forwards;
@@ -35,3 +39,13 @@
     opacity: 1;
   }
 }
+
+@keyframes fallInFullOpacity {
+  from {
+    scale: 2;
+  }
+  to {
+    scale: 1;
+  }
+}
+

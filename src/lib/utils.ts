@@ -20,3 +20,11 @@ export const getSolution = (firstNumber: number, secondNumber: number, operator:
       return null;
   }
 };
+
+export const animate = (element: React.RefObject<HTMLElement | null>, className: string) => {
+  element.current!.classList.add(className);
+
+  setTimeout(() => {
+    element.current!.classList.remove(className);
+  }, 250);
+};
