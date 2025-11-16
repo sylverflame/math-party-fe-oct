@@ -11,7 +11,6 @@ const useCountdown = (startTime: number, onTimedout: () => void) => {
       setTime(start + startTime * 1000 - Date.now());
       setcountdownTimeInContext(start + startTime * 1000 - Date.now());
     }, 100);
-    console.log("Timer mounted");
     return () => clearInterval(interval);
     
   }, []);

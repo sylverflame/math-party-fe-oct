@@ -42,7 +42,7 @@ const Game = () => {
   };
 
   const updateChat = (type: any, payload: any) => {
-    const isMessage = type === "CHAT_MESSAGE"
+    const isMessage = type === "CHAT_MESSAGE";
     const newChatItem: Chat = {
       type: isMessage ? "MESSAGE" : "EVENT",
       content: payload.message,
@@ -73,7 +73,7 @@ const Game = () => {
       }
       if (payload.round) {
         setCurrentRound(payload.round);
-        showTimer(true)
+        showTimer(true);
       }
       if (payload.gameState) {
         setGameState({ ...payload.gameState });
@@ -103,8 +103,8 @@ const Game = () => {
     return (
       <GameContainer>
         <TimerContextProvider>
-            <GameSidebar sendMessage={sendMessage} />
-            <GameRoom sendMessage={sendMessage} />
+          <GameSidebar sendMessage={sendMessage} />
+          <GameRoom sendMessage={sendMessage} />
         </TimerContextProvider>
       </GameContainer>
     );

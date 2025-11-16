@@ -22,9 +22,11 @@ export const getSolution = (firstNumber: number, secondNumber: number, operator:
 };
 
 export const animate = (element: React.RefObject<HTMLElement | null>, className: string) => {
-  element.current!.classList.add(className);
+  if (!element.current) return;
+  element.current.classList.add(className);
 
   setTimeout(() => {
-    element.current!.classList.remove(className);
+    if (!element.current) return;
+    element.current.classList.remove(className);
   }, 250);
 };
