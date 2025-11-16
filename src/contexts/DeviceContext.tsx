@@ -1,7 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-type DeviceType = "Phone" | "Tablet" | "PC";
-
 type DeviceContextType = {
   screenWidth: number;
   isTouchDevice: boolean;
@@ -12,7 +10,6 @@ type DeviceContextType = {
 const DeviceContext = createContext<DeviceContextType | null>(null);
 
 export const DeviceContextProvider = ({ children }: { children: React.ReactNode }) => {
-  const [deviceType, setDeviceType] = useState(null);
   const [screenWidth, setScreenWidth] = useState(0);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [isAndroid, setIsAndroid] = useState(false);
