@@ -2,6 +2,7 @@ import { Button } from "./ui/button";
 import SwapIcon from "@/assets/swap.svg?react";
 import Backspace from "@/assets/backspace.svg?react";
 import { useMemo, useState } from "react";
+import { useDevice } from "@/contexts/DeviceContext";
 
 interface IKeypad {
   onNumberPressed: (number: number) => void;
@@ -10,6 +11,7 @@ interface IKeypad {
 
 const Keypad = ({ onNumberPressed, onBackspace }: IKeypad) => {
   const [isAscendingKeys, setIsAscendingKeys] = useState(true);
+  const { isTouchDevice } = useDevice();
   const onSwap = () => {
     setIsAscendingKeys((prev) => !prev);
   };
@@ -25,7 +27,7 @@ const Keypad = ({ onNumberPressed, onBackspace }: IKeypad) => {
     }
 
     if (key.type === "swap") {
-      onSwap()
+      onSwap();
       return;
     }
 
@@ -38,7 +40,12 @@ const Keypad = ({ onNumberPressed, onBackspace }: IKeypad) => {
     <div className="grid grid-cols-3 w-full gap-1 mt-6">
       {keys.map((key, index) => {
         return (
-          <Button key={index} className="bg-muted text-center text-card-foreground font-bold active:bg-border h-[70px] text-2xl sm:text-3xl" onTouchStart={() => handleClick(key)} onClick={() => handleClick(key)}>
+          <Button
+            key={index}
+            className="bg-muted text-center text-card-foreground font-bold active:bg-border active:scale-80 h-[70px] text-2xl sm:text-3xl"
+            onTouchStart={() => isTouchDevice && handleClick(key)}
+            onClick={() => !isTouchDevice && handleClick(key)}
+          >
             {typeof key === "number" ? key : key.type === "swap" ? <SwapIcon className="swap dark:invert size-6" /> : <Backspace className="backspace dark:invert size-8" />}
           </Button>
         );
