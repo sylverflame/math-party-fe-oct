@@ -38,7 +38,7 @@ const Keypad = ({ onNumberPressed, onBackspace }: IKeypad) => {
     <div className="grid grid-cols-3 w-full gap-1 mt-6">
       {keys.map((key, index) => {
         return (
-          <Button key={index} className="bg-muted text-center text-card-foreground font-bold active:bg-border h-[70px] text-2xl sm:text-3xl" onTouchStart={() => handleClick(key)}>
+          <Button key={index} className="bg-muted text-center text-card-foreground font-bold active:bg-border h-[70px] text-2xl sm:text-3xl" onTouchStart={() => handleClick(key)} onClick={() => handleClick(key)}>
             {typeof key === "number" ? key : key.type === "swap" ? <SwapIcon className="swap dark:invert size-6" /> : <Backspace className="backspace dark:invert size-8" />}
           </Button>
         );
