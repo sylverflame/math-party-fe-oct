@@ -1,9 +1,14 @@
 import { useChat } from "@/contexts/ChatContext";
+import { cn } from "@/lib/utils";
 
-const NewChatIndicator = () => {
+interface INewChatIndicator {
+  className?: string;
+}
+
+const NewChatIndicator = ({ className }: INewChatIndicator) => {
   const { showNewChatIndicator } = useChat();
 
-  return <>{showNewChatIndicator && <div className="size-3 bg-green-600 dark:bg-green-400 rounded-4xl absolute -right-1 -top-1 shadow-lg fade-in" />}</>;
+  return <>{showNewChatIndicator && <div className={cn("size-3 bg-green-600 dark:bg-green-400 rounded-4xl shadow-lg fade-in", className)} />}</>;
 };
 
-export default NewChatIndicator
+export default NewChatIndicator;
