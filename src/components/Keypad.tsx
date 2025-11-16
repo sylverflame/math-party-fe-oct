@@ -11,7 +11,7 @@ interface IKeypad {
 
 const Keypad = ({ onNumberPressed, onBackspace }: IKeypad) => {
   const [isAscendingKeys, setIsAscendingKeys] = useState(true);
-  const { isTouchDevice } = useDevice();
+  const { isTouchDevice, canVibrate } = useDevice();
   const onSwap = () => {
     setIsAscendingKeys((prev) => !prev);
   };
@@ -21,6 +21,7 @@ const Keypad = ({ onNumberPressed, onBackspace }: IKeypad) => {
   const keys = isAscendingKeys ? ASC_KEYS : DESC_KEYS;
 
   const handleClick = (key: number | { type: string }) => {
+    if (canVibrate) navigator.vibrate(50);
     if (typeof key === "number") {
       onNumberPressed(key);
       return;
