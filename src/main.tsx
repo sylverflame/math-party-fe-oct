@@ -5,14 +5,17 @@ import { UserContextProvider } from "./contexts/UserContext.tsx";
 import "./index.css";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 import EventEmitter from "eventemitter3";
-export const eventEmitter = new EventEmitter()
+import { DeviceContextProvider } from "./contexts/DeviceContext.tsx";
+export const eventEmitter = new EventEmitter();
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>
     <BrowserRouter>
-      <UserContextProvider>
-        <App />
-      </UserContextProvider>
+      <DeviceContextProvider>
+        <UserContextProvider>
+          <App />
+        </UserContextProvider>
+      </DeviceContextProvider>
     </BrowserRouter>
   </ThemeProvider>
 );

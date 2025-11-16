@@ -14,3 +14,9 @@ const events = {
 } as const;
 
 export type AppEvent = (typeof events)[keyof typeof events];
+
+export enum ScreenSizes {
+  SMALL = 640,
+  MEDIUM = 768,
+  LARGE = 1024
+}
