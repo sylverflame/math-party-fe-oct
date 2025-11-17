@@ -43,7 +43,7 @@ const Chatroom = ({ sendMessage }: IChatroom) => {
                 className={cn(
                   "message fade-in text-white border px-2 py-1 rounded-lg my-2 flex flex-col",
                   { "bg-green-800 self-end": loggedUser === userId },
-                  { "bg-blue-800 self-start": loggedUser !== userId }
+                  { "bg-cyan-800 self-start": loggedUser !== userId }
                 )}
                 key={index}
               >
