@@ -168,3 +168,11 @@
     appearance: inherit;
   }
 }
+
+.bg-gradient {
+  background: linear-gradient(180deg, var(--background) 0%, var(--card) 15%, var(--card) 30%, var(--background) 100%);
+}
+
+.bg-gradient-70 {
+  background: linear-gradient(180deg, var(--background) / 0.7 0%, var(--card) / 0.7 15%, var(--card) / 0.7 30%, var(--background) / 0.7 100%);
+}
