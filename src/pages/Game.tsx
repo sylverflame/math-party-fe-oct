@@ -6,7 +6,7 @@ import { useGame } from "@/contexts/GameContext";
 import { TimerContextProvider } from "@/contexts/TimerContext";
 import { useUser } from "@/contexts/UserContext";
 import useWebSocket from "@/hooks/useWebSocket";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { toast } from "sonner";
 import CreateGame from "./CreateGame";
@@ -14,6 +14,7 @@ import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
 
 const Game = () => {
+  const [showSidebar, setShowSidebar] = useState(false)
   const [searchParams] = useSearchParams();
   const { setGameState, setCurrentRound, setIsPlayerGameOver, gameState } = useGame();
   const { setChats, setShowNewChatIndicator } = useChat();
@@ -82,7 +83,6 @@ const Game = () => {
     }
   };
   const { sendMessage } = useWebSocket(import.meta.env.VITE_WS_SERVER, onMessage);
-
   if (gameState.status === "CREATING_GAME") {
     return (
       <GameContainer>
@@ -103,8 +103,8 @@ const Game = () => {
     return (
       <GameContainer>
         <TimerContextProvider>
-          <GameSidebar sendMessage={sendMessage} />
-          <GameRoom sendMessage={sendMessage} />
+          <GameSidebar sendMessage={sendMessage} onClose={() => setShowSidebar(false)} showSidebar={showSidebar}/>
+          <GameRoom sendMessage={sendMessage} onClickChatIcon={() => setShowSidebar(true)}/>
         </TimerContextProvider>
       </GameContainer>
     );
