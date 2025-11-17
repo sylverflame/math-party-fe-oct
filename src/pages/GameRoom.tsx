@@ -1,3 +1,4 @@
+import GameInfoWidget from "@/components/GameInfoWidget";
 import GameInProgress from "@/components/GameInProgress";
 import Results from "@/components/Results";
 import { Button } from "@/components/ui/button";
@@ -8,9 +9,10 @@ import type { ClientMessageType } from "@/hooks/useWebSocket";
 
 type GameRoomProps = {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
+  onClickChatIcon: () => void;
 };
 
-const GameRoom = ({ sendMessage }: GameRoomProps) => {
+const GameRoom = ({ sendMessage, onClickChatIcon }: GameRoomProps) => {
   const {
     user: { userId },
   } = useUser();
@@ -34,7 +36,8 @@ const GameRoom = ({ sendMessage }: GameRoomProps) => {
   const onSubmitScore = () => {};
 
   return (
-    <div className="w-[100%] md:w-[60%] lg:w-[70%] border h-full rounded-lg flex flex-col items-center p-4 fade-in">
+    <div className="game-room w-[100%] md:w-[60%] lg:w-[70%] border h-full rounded-xl flex flex-col items-center p-4 fade-in relative">
+      <GameInfoWidget onClickChatIcon={onClickChatIcon} />
       {status === "WAITING_TO_START" && (
         <WaitingScreen
           title={"Game Starting"}

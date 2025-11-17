@@ -11,9 +11,7 @@ import { Input } from "./ui/input";
 import { Spinner } from "./ui/spinner";
 import { useDevice } from "@/contexts/DeviceContext";
 import { ScreenSizes } from "@/types";
-import RoomCode from "./RoomCode";
-import ChatIcon from "@/assets/chat.svg?react";
-import NewChatIndicator from "./NewChatIndicator";
+
 import Keypad from "./Keypad";
 import KeypadIcon from "@/assets/dial-keypad.svg?react";
 
@@ -111,20 +109,12 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
   }
   return (
     <>
-      <div className="w-full flex flex-col items-end md:flex-row md:items-center justify-between font-bold text-lg text-card-foreground relative  gap-2">
-        {/* For mobile devices only*/}
-        <div className="absolute left-0 top-0 fade-in flex flex-col gap-2 md:hidden">
-          <RoomCode />
-          <div className="relative">
-            <ChatIcon className="invert size-7" />
-            <NewChatIndicator className="absolute top-0 -left-1"/>
-          </div>
-        </div>
+      <div className="w-full flex flex-col items-end md:flex-row md:items-center justify-between font-bold text-lg text-card-foreground gap-2">
         <div className="flex gap-2 items-center text-sm md:text-lg">
           Round <div className="bg-accent size-7 md:size-9 rounded-full flex items-center justify-center">{gameState.players.find((player: any) => player.userId === userId).currentRound}</div>
         </div>
         <div className="flex gap-2 items-center text-sm md:text-lg">
-          Penalties{" "}
+          Penalties
           <div ref={penaltiesRef} className="bg-red-300 dark:bg-red-800 size-7 md:size-9 rounded-full flex items-center justify-center">
             {gameState.players.find((player: any) => player.userId === userId).penalties}
           </div>

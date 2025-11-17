@@ -8,7 +8,7 @@ interface INewChatIndicator {
 const NewChatIndicator = ({ className }: INewChatIndicator) => {
   const { showNewChatIndicator } = useChat();
 
-  return <>{showNewChatIndicator && <div className={cn("size-3 bg-green-600 dark:bg-green-400 rounded-4xl shadow-lg fade-in", className)} />}</>;
+  return <>{showNewChatIndicator && <div className={cn("size-3 bg-green-400 dark:bg-green-800 rounded-4xl shadow-lg fade-in", className)} />}</>;
 };
 
 export default NewChatIndicator;

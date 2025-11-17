@@ -1,13 +1,15 @@
-import CopyIcon from "@/assets/copy.svg?react";
-import { useDevice } from "@/contexts/DeviceContext";
 import { useGame } from "@/contexts/GameContext";
-import { ScreenSizes } from "@/types";
+import { cn } from "@/lib/utils";
 import { useRef } from "react";
 import { toast } from "sonner";
+import { BsDoorOpen } from "react-icons/bs";
 
-const RoomCode = () => {
+interface IRoomCode {
+  className?: string;
+  showIcon?: boolean;
+}
+const RoomCode = ({ showIcon = true, className }: IRoomCode) => {
   const { gameState } = useGame();
-  const { screenWidth } = useDevice();
   const roomCodeRef = useRef<HTMLDivElement>(null);
 
   const onClickRoomCode = async () => {
@@ -20,26 +22,12 @@ const RoomCode = () => {
     });
   };
 
-  if (screenWidth < ScreenSizes.MEDIUM) {
-    return (
-      <div ref={roomCodeRef} onClick={onClickRoomCode} className="uppercase text-xs font-semibold text-foreground flex gap-2 items-center">
+  return (
+    <div ref={roomCodeRef} onClick={onClickRoomCode} className={cn("uppercase text-sm font-semibold text-foreground flex gap-2 items-center", className)}>
+        {showIcon && <BsDoorOpen className="size-5" />}
         {gameState.roomCode}
-        <CopyIcon className="size-4 text-foreground" />
-      </div>
-    );
-  }
-
-  if (screenWidth >= ScreenSizes.MEDIUM) {
-    return (
-      <>
-        <h6 className="text-card-foreground font-bold mb-2">{"Room Code"}</h6>
-        <div ref={roomCodeRef} onClick={onClickRoomCode} className="text-muted-foreground border-2 rounded-xl border-border text-2xl p-2 cursor-pointer flex justify-center items-center gap-4">
-          {gameState.roomCode}
-          <CopyIcon className="size-6 text-muted-foreground opacity-50" />
-        </div>
-      </>
-    );
-  }
+    </div>
+  );
 };
 
 export default RoomCode;
