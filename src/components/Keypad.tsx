@@ -43,7 +43,7 @@ const Keypad = ({ onNumberPressed, onBackspace }: IKeypad) => {
         return (
           <Button
             key={index}
-            className="bg-muted text-center text-card-foreground font-bold active:bg-border active:scale-80 h-[70px] text-2xl sm:text-3xl"
+            className="bg-muted text-center text-card-foreground font-bold active:bg-border active:scale-80 h-[60px] text-2xl sm:text-3xl"
             onTouchStart={() => isTouchDevice && handleClick(key)}
             onClick={() => !isTouchDevice && handleClick(key)}
           >

@@ -53,7 +53,7 @@ const PlayerScoreWithScorebar = () => {
       {players
         .filter((player: any) => player.userId === userId)
         .map((player: any) => (
-          <Scorebar value={player.totalScore} maximum={MAX_SCORE} className="left-0 bottom-0" />
+          <Scorebar key={player.userId} value={player.totalScore} maximum={MAX_SCORE} className="left-0 bottom-0" />
         ))}
     </>
   );

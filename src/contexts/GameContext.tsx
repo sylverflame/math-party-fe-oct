@@ -1,7 +1,7 @@
 import type { GameRound } from "@/types";
 import { createContext, useContext, useState } from "react";
 
-type GameState = {
+export type GameState = {
   status: string;
   roomCode?: string;
   host?: string;
