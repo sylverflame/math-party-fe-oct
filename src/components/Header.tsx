@@ -25,7 +25,7 @@ const Header = () => {
     return null;
   }
   return (
-    <div className="header-component h-12 w-full bg-[var(--header-bg)] shadow-md flex items-center justify-between px-4">
+    <div className="header-component h-16 w-full bg-[var(--header-bg)] shadow-md flex items-center justify-between px-4">
       <Home className="size-8 invert cursor-pointer" onClick={() => navigate("/app/home")} />
       {/* TODO: Add fullscreen logic */}
       <Button className="hidden" onClick={onToggleFullScreen}>
