@@ -4,7 +4,7 @@ import { useGame, type GameState } from "@/contexts/GameContext";
 import { useUser } from "@/contexts/UserContext";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
 import { animate, getSolution } from "@/lib/utils";
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useRef, useState, type Ref } from "react";
 import CountdownTimer from "./CountdownTimer";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -24,10 +24,11 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
   const {
     user: { userId },
   } = useUser();
-  const { countdownTimeInContext: countdownTime, showCountdownTimer: showTimer, setShowCountdownTimer: setShowTimer } = useCountdownContext();
+  const { showCountdownTimer: showTimer, setShowCountdownTimer: setShowTimer } = useCountdownContext();
   const [answerField, setAnswerField] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const penaltiesRef = useRef<HTMLDivElement>(null);
+  const countDownTimerRef = useRef<{ takeSnapshot: () => number } | null>(null);
 
   const onTimedout = () => {
     if (!showTimer) return;
@@ -60,10 +61,13 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
   };
 
   const onCorrectSolution = () => {
+    if(!countDownTimerRef.current){
+      return
+    }
     sendMessage("SOLUTION_SUBMIT", {
       roomCode: gameState.roomCode,
       round: currentRound?.roundNumber,
-      elapsedTime: gameState.timePerRound * 1000 - countdownTime!, // Pass the elaspsed time in the round
+      elapsedTime: gameState.timePerRound * 1000 - countDownTimerRef.current?.takeSnapshot(), // Pass the elaspsed time in the round
     });
     setAnswerField("");
     setShowTimer(false);
@@ -121,6 +125,7 @@ const GameInProgress = ({ sendMessage }: IGameInProgress) => {
         answerField={answerField}
         onChangeAnswerField={onChangeAnswerField}
         showTimer={showTimer}
+        countDownTimerRef={countDownTimerRef}
       />
       <KeypadSection onKeypadNumberPressed={onKeypadNumberPressed} onKeypadBackspace={onKeypadBackspace} />
     </>
@@ -164,25 +169,37 @@ interface IGameExpressionSection {
   answerField: string;
   onChangeAnswerField: (e: React.ChangeEvent<HTMLInputElement>) => void;
   showTimer: boolean;
+  countDownTimerRef: Ref<{ takeSnapshot: () => number }> | undefined;
 }
 
-const GameExpressionSection = forwardRef<HTMLInputElement, IGameExpressionSection>(({ gameState, onTimedout, onSolutionSubmit, currentRound, answerField, onChangeAnswerField, showTimer }, ref) => {
-  const { isTouchDevice } = useDevice();
-  return (
-    <form className="expression-container flex flex-col items-center relative" onSubmit={onSolutionSubmit}>
-      <div className="expression text-card-foreground text-[calc(2.5rem+3vw)] font-extrabold my-8">{`${currentRound.firstNumber} ${OPERATORS[currentRound.operator]} ${
-        currentRound.secondNumber
-      }`}</div>
-      <div className="flex items-center rounded-lg overflow-hidden border w-full">
-        <Input autoFocus={!isTouchDevice} ref={ref} className="border-none rounded-[0px]" type="number" name="solution-field" id="solution-field" value={answerField} onChange={onChangeAnswerField} />
-        <Button disabled={!showTimer} type="submit" className="text-2xl font-extrabold rounded-none">
-          {showTimer ? "→" : <Spinner />}
-        </Button>
-      </div>
-      {showTimer && <CountdownTimer className="absolute -bottom-2 left-0" startTime={gameState.timePerRound} onTimedout={onTimedout} />}
-    </form>
-  );
-});
+const GameExpressionSection = forwardRef<HTMLInputElement, IGameExpressionSection>(
+  ({ countDownTimerRef, gameState, onTimedout, onSolutionSubmit, currentRound, answerField, onChangeAnswerField, showTimer }, ref) => {
+    const { isTouchDevice } = useDevice();
+    return (
+      <form className="expression-container flex flex-col items-center relative" onSubmit={onSolutionSubmit}>
+        <div className="expression text-card-foreground text-[calc(2.5rem+3vw)] font-extrabold my-8">{`${currentRound.firstNumber} ${OPERATORS[currentRound.operator]} ${
+          currentRound.secondNumber
+        }`}</div>
+        <div className="flex items-center rounded-lg overflow-hidden border w-full">
+          <Input
+            autoFocus={!isTouchDevice}
+            ref={ref}
+            className="border-none rounded-[0px]"
+            type="number"
+            name="solution-field"
+            id="solution-field"
+            value={answerField}
+            onChange={onChangeAnswerField}
+          />
+          <Button disabled={!showTimer} type="submit" className="text-2xl font-extrabold rounded-none">
+            {showTimer ? "→" : <Spinner />}
+          </Button>
+        </div>
+        {showTimer && <CountdownTimer ref={countDownTimerRef} className="absolute -bottom-2 left-0" startTime={gameState.timePerRound} onTimedout={onTimedout} />}
+      </form>
+    );
+  }
+);
 
 interface IKeypadSection {
   onKeypadNumberPressed: (number: number) => void;

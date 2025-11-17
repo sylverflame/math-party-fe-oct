@@ -22,6 +22,7 @@ const GameRoom = ({ sendMessage, onClickChatIcon }: GameRoomProps) => {
     isPlayerGameOver,
   } = useGame();
 
+
   const onClickGameStart = () => {
     sendMessage("START_GAME", {
       roomCode,
