@@ -10,7 +10,7 @@ import SW from "./components/SuspenseWrapper";
 import AppLayout from "./layouts/AppLayout";
 
 const Home = lazy(() => import("./pages/Home"));
-const Login = lazy(() => import("./pages/Login"));
+const Login = lazy(() => import("./pages/LoginOAuth"));
 
 function App() {
   const { isDarkMode } = useTheme();
@@ -19,6 +19,7 @@ function App() {
     <div className={`app-component w-[1024px] h-[100%] bg-background shadow-lg flex flex-col items-center ${isDarkMode ? "dark" : "light"}`}>
       <Routes>
         <Route index element={<SW component={Login} />} />
+        <Route path="/login" element={<SW component={Login} />} />
         <Route path="app" element={<ProtectedRoute element={<AppLayout />} />}>
           <Route path="home" element={<EBW children={<SW component={Home} />} />} />
           <Route path="game" element={<GameWithProviders />} />
