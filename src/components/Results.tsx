@@ -16,7 +16,8 @@ const Results = () => {
               {index === 1 && <SilverMedal className="size-8 fall-in-1s" />}
               <div className={cn(`text-card-foreground font-semibold`)}>{player.userId}</div>
             </div>
-            <div className="font-bold text-primary text-2xl">{player.totalScore}</div>
+            <div className="font-bold text-primary text-3xl">{player.totalScore}</div>
+            <div className="font-bold text-primary">{parseInt(player.elapsedTime)/1000}s</div>
           </div>
         );
       })}
