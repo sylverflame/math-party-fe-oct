@@ -1,7 +1,9 @@
 import { createContext, useContext, useState } from "react";
 
 type User = {
+  id: number | null;
   userId: string | null;
+  country?: string;
 };
 
 type UserContextType = {
@@ -20,7 +22,7 @@ type UserContextProviderProps = {
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   const [user, setUser] = useState<User>(() => {
     const stored = localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : { userId: null };
+    return stored ? JSON.parse(stored) : { id: null, userId: null };
   });
 
   const login = (user: User) => {
@@ -29,7 +31,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
   };
 
   const logout = () => {
-    setUser({ userId: null });
+    setUser({ id: null, userId: null });
     localStorage.removeItem("user");
   };
   return <Provider value={{ user, login, logout }}>{children}</Provider>;
