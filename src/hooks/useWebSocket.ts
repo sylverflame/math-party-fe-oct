@@ -37,7 +37,7 @@ const useWebSocket = (url: string, onMessage: (event: MessageEvent<any>) => void
   const onSocketOpen = () => {
     sendMessage("AUTHENTICATE_USER", {
       userId,
-      token: "abc",
+      token: sessionStorage.getItem("token"),
     });
   };
 
