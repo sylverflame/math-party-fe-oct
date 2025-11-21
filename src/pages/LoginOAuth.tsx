@@ -2,6 +2,7 @@ import { postData } from "@/api/methods";
 import { API_URLS } from "@/api/urls";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
+import { useSpinner } from "@/contexts/GlobalSpinnerContext";
 import { useUser } from "@/contexts/UserContext";
 import { oAuthLoginResponseSchema } from "@/schemas";
 import { useEffect } from "react";
@@ -13,11 +14,13 @@ const LoginOAuth = () => {
     user: { userId },
     login,
   } = useUser();
+  const { showGlobalSpinner, hideGlobalSpinner } = useSpinner();
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
     const token = searchParams.get("token");
     const onTokenPresent = async () => {
+      showGlobalSpinner();
       try {
         const response = await postData(API_URLS.LOGIN, { token });
         const { isValidUser, user, accessToken } = oAuthLoginResponseSchema.parse(response.data);
@@ -30,6 +33,7 @@ const LoginOAuth = () => {
         console.error("Login Error -", error);
         toast.error("Login failed!");
       }
+      hideGlobalSpinner();
     };
     if (token) {
       onTokenPresent();

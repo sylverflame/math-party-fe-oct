@@ -6,6 +6,7 @@ import { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router";
 import EBW from "./components/EBWrapper";
 import GameWithProviders from "./components/GameWithProviders";
+import GlobalSpinner from "./components/GlobalSpinner";
 import SW from "./components/SuspenseWrapper";
 import AppLayout from "./layouts/AppLayout";
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
       <Toaster position="top-center" richColors duration={1200} />
+      <GlobalSpinner />
     </div>
   );
 }

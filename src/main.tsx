@@ -6,6 +6,7 @@ import "./index.css";
 import { ThemeProvider } from "./contexts/ThemeContext.tsx";
 import EventEmitter from "eventemitter3";
 import { DeviceContextProvider } from "./contexts/DeviceContext.tsx";
+import { SpinnerProvider } from "./contexts/GlobalSpinnerContext.tsx";
 export const eventEmitter = new EventEmitter();
 
 createRoot(document.getElementById("root")!).render(
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <DeviceContextProvider>
         <UserContextProvider>
-          <App />
+          <SpinnerProvider>
+            <App />
+          </SpinnerProvider>
         </UserContextProvider>
       </DeviceContextProvider>
     </BrowserRouter>
