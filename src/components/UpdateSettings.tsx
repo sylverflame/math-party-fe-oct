@@ -8,9 +8,10 @@ import { useGame } from "@/contexts/GameContext";
 interface IUpdateSettings {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
   setShowUpdateSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  allowUpdate: boolean;
 }
 
-const UpdateSettings = ({ sendMessage, setShowUpdateSettings }: IUpdateSettings) => {
+const UpdateSettings = ({ sendMessage, setShowUpdateSettings, allowUpdate }: IUpdateSettings) => {
   const {
     gameState: { settings, roomCode },
   } = useGame();
@@ -22,6 +23,7 @@ const UpdateSettings = ({ sendMessage, setShowUpdateSettings }: IUpdateSettings)
     defaultValues: settings,
   });
   const onUpdateSettings: SubmitHandler<GameSettingForm> = (data) => {
+    if (!allowUpdate) return;
     const { totalRounds, timePerRound, difficulty, isPrivateGame } = data;
     sendMessage("UPDATE_GAME_SETTINGS", {
       roomCode,
@@ -33,18 +35,20 @@ const UpdateSettings = ({ sendMessage, setShowUpdateSettings }: IUpdateSettings)
         difficulty,
       },
     });
-    setShowUpdateSettings(false)
+    setShowUpdateSettings(false);
   };
   return (
     <form className="flex flex-col w-[80%]" onSubmit={handleSubmit(onUpdateSettings)}>
-      <GameSettings register={register} />
+      <GameSettings register={register} disabled={!allowUpdate} />
       <div className="flex gap-2 mt-4">
         <Button type="button" variant={"secondary"} onClick={() => setShowUpdateSettings(false)}>
           {"Close"}
         </Button>
-        <Button disabled={!isDirty} type="submit">
-          {"Update"}
-        </Button>
+        {allowUpdate && (
+          <Button disabled={!isDirty} type="submit">
+            {"Update"}
+          </Button>
+        )}
       </div>
     </form>
   );

@@ -48,14 +48,14 @@ const GameRoom = ({ sendMessage, onClickChatIcon }: GameRoomProps) => {
           title={"Game Starting"}
           description={"Waiting for host to start."}
           content={[
-            userId === host && showUpdateSettings && <UpdateSettings sendMessage={sendMessage} setShowUpdateSettings={setShowUpdateSettings} />,
-            userId === host && !showUpdateSettings && (
+            showUpdateSettings && <UpdateSettings sendMessage={sendMessage} setShowUpdateSettings={setShowUpdateSettings} allowUpdate={userId === host} />,
+            !showUpdateSettings && (
               <div className="flex flex-col gap-2">
                 <Button variant="secondary" onClick={() => setShowUpdateSettings(true)}>
                   <IoSettingsOutline className="size-5" />
                   {"Game Settings"}
                 </Button>
-                <Button onClick={onClickGameStart}>{"Start Game"}</Button>
+                {userId === host && <Button onClick={onClickGameStart}>{"Start Game"}</Button>}
               </div>
             ),
           ]}

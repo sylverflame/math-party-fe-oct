@@ -11,13 +11,14 @@ export type GameSettingForm = {
 
 interface IGameSettings {
   register: UseFormRegister<GameSettingForm>;
+  disabled?: boolean 
 }
-const GameSettings = ({ register }: IGameSettings) => {
+const GameSettings = ({ register, disabled = false }: IGameSettings) => {
   return (
     <>
       <div className="flex gap-2 justify-between py-1 text-muted-foreground">
         <Label htmlFor="totalRounds">{"Total Rounds"}</Label>
-        <select {...register("totalRounds")}>
+        <select {...register("totalRounds")} disabled={disabled}>
           <option value={5}>5</option>
           <option value={10}>10</option>
           <option value={20}>20</option>
@@ -25,7 +26,7 @@ const GameSettings = ({ register }: IGameSettings) => {
       </div>
       <div className="flex gap-2 justify-between py-1 text-muted-foreground">
         <Label htmlFor="timePerRound">{"Time per Round"}</Label>
-        <select {...register("timePerRound")}>
+        <select {...register("timePerRound")} disabled={disabled}>
           <option value={5}>5</option>
           <option value={10}>10</option>
           <option value={20}>20</option>
@@ -34,7 +35,7 @@ const GameSettings = ({ register }: IGameSettings) => {
 
       <div className="flex gap-2 justify-between py-1 text-muted-foreground">
         <Label htmlFor="difficulty">{"Difficulty"}</Label>
-        <select {...register("difficulty")}>
+        <select {...register("difficulty")} disabled={disabled}>
           <option value={"Easy"}>{"Easy"}</option>
           <option value={"Medium"}>{"Medium"}</option>
           <option value={"Hard"}>{"Hard"}</option>
@@ -43,7 +44,7 @@ const GameSettings = ({ register }: IGameSettings) => {
       </div>
       <div className="flex gap-2 justify-between py-2 text-muted-foreground">
         <Label htmlFor="private-game">{"Private Game"}</Label>
-        <input className="scale-120 cursor-pointer" type="checkbox" id="private-game" {...register("isPrivateGame")} />
+        <input className="scale-120 cursor-pointer" type="checkbox" id="private-game" {...register("isPrivateGame")} disabled={disabled}/>
       </div>
     </>
   );
