@@ -9,6 +9,7 @@ import { useUser } from "@/contexts/UserContext";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
 import { useState } from "react";
 import { IoSettingsOutline } from "react-icons/io5";
+import { MdOutlineLeaderboard } from "react-icons/md";
 
 type GameRoomProps = {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
@@ -38,7 +39,7 @@ const GameRoom = ({ sendMessage, onClickChatIcon }: GameRoomProps) => {
     });
   };
 
-  const onSubmitScore = () => {};
+  const onShowLeaderboard = () => {};
 
   return (
     <div className="game-room w-[100%] md:w-[60%] lg:w-[70%] border h-full rounded-xl flex flex-col items-center p-4 fade-in relative">
@@ -71,7 +72,7 @@ const GameRoom = ({ sendMessage, onClickChatIcon }: GameRoomProps) => {
           content={[
             <Results />,
             <div className="flex gap-4">
-              {<Button onClick={onSubmitScore}>{"Submit Score"}</Button>}
+              {<Button onClick={onShowLeaderboard}><MdOutlineLeaderboard />{"Leaderboard"}</Button>}
               {userId === host && (
                 <Button variant={"outline"} onClick={onClickGameRestart}>
                   {"Restart Game"}
