@@ -14,7 +14,7 @@ import GameRoom from "./GameRoom";
 import JoinGame from "./JoinGame";
 
 const Game = () => {
-  const [showSidebar, setShowSidebar] = useState(false)
+  const [showSidebar, setShowSidebar] = useState(false);
   const [searchParams] = useSearchParams();
   const { setGameState, setCurrentRound, setIsPlayerGameOver, gameState } = useGame();
   const { setChats, setShowNewChatIndicator } = useChat();
@@ -65,7 +65,7 @@ const Game = () => {
       setIsPlayerGameOver(false);
     }
 
-    const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "GAME_OVER", "GAME_RESTARTED"];
+    const allowedTypes = ["GAME_CREATED", "PLAYER_JOINED", "PLAYER_LEFT", "GAME_STARTED", "NEXT_ROUND", "STATE_UPDATED", "GAME_OVER", "GAME_RESTARTED", "GAME_SETTINGS_UPDATED"];
     if (allowedTypes.includes(type)) {
       if (payload.message) {
         toast.success("", {
@@ -103,8 +103,8 @@ const Game = () => {
     return (
       <GameContainer>
         <TimerContextProvider>
-          <GameSidebar sendMessage={sendMessage} onClose={() => setShowSidebar(false)} showSidebar={showSidebar}/>
-          <GameRoom sendMessage={sendMessage} onClickChatIcon={() => setShowSidebar(true)}/>
+          <GameSidebar sendMessage={sendMessage} onClose={() => setShowSidebar(false)} showSidebar={showSidebar} />
+          <GameRoom sendMessage={sendMessage} onClickChatIcon={() => setShowSidebar(true)} />
         </TimerContextProvider>
       </GameContainer>
     );

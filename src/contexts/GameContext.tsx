@@ -8,6 +8,7 @@ export type GameState = {
   players?: any;
   timePerRound?: any;
   results?: any;
+  settings?: any;
 };
 
 const initialState: GameState = {

@@ -2,10 +2,13 @@ import GameInfoWidget from "@/components/GameInfoWidget";
 import GameInProgress from "@/components/GameInProgress";
 import Results from "@/components/Results";
 import { Button } from "@/components/ui/button";
+import UpdateSettings from "@/components/UpdateSettings";
 import WaitingScreen from "@/components/WaitingScreen";
 import { useGame } from "@/contexts/GameContext";
 import { useUser } from "@/contexts/UserContext";
 import type { ClientMessageType } from "@/hooks/useWebSocket";
+import { useState } from "react";
+import { IoSettingsOutline } from "react-icons/io5";
 
 type GameRoomProps = {
   sendMessage: (type: ClientMessageType, payload: Record<string, any>) => void;
@@ -22,6 +25,7 @@ const GameRoom = ({ sendMessage, onClickChatIcon }: GameRoomProps) => {
     isPlayerGameOver,
   } = useGame();
 
+  const [showUpdateSettings, setShowUpdateSettings] = useState(false);
 
   const onClickGameStart = () => {
     sendMessage("START_GAME", {
@@ -43,7 +47,18 @@ const GameRoom = ({ sendMessage, onClickChatIcon }: GameRoomProps) => {
         <WaitingScreen
           title={"Game Starting"}
           description={"Waiting for host to start."}
-          content={[userId === host && <Button onClick={onClickGameStart}>{"Start Game"}</Button>]}
+          content={[
+            userId === host && showUpdateSettings && <UpdateSettings sendMessage={sendMessage} setShowUpdateSettings={setShowUpdateSettings} />,
+            userId === host && !showUpdateSettings && (
+              <div className="flex flex-col gap-2">
+                <Button variant="secondary" onClick={() => setShowUpdateSettings(true)}>
+                  <IoSettingsOutline className="size-5" />
+                  {"Game Settings"}
+                </Button>
+                <Button onClick={onClickGameStart}>{"Start Game"}</Button>
+              </div>
+            ),
+          ]}
           showSpinner={true}
         />
       )}

@@ -5,7 +5,20 @@ import { toast } from "sonner";
 import z from "zod";
 
 // Web scoket message schemas
-const ClientMessageTypeSchema = z.enum(["AUTHENTICATE_USER", "CREATE_GAME", "JOIN_ROOM", "LEAVE_ROOM", "START_GAME", "SOLUTION_SUBMIT", "MESSAGE", "SEND_CHAT_MESSAGE", "PENALTY", "RESTART_GAME", "NO_ANSWER"]);
+const ClientMessageTypeSchema = z.enum([
+  "AUTHENTICATE_USER",
+  "CREATE_GAME",
+  "JOIN_ROOM",
+  "LEAVE_ROOM",
+  "START_GAME",
+  "SOLUTION_SUBMIT",
+  "MESSAGE",
+  "SEND_CHAT_MESSAGE",
+  "PENALTY",
+  "RESTART_GAME",
+  "NO_ANSWER",
+  "UPDATE_GAME_SETTINGS"
+]);
 export const ClientMessageSchema = z.object({
   type: ClientMessageTypeSchema,
   payload: z.any(),
