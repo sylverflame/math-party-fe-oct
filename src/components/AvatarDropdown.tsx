@@ -8,25 +8,41 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Logout from "@/assets/logout.svg?react";
 import ThemeToggle from "./ThemeToggle";
+import { useUser } from "@/contexts/UserContext";
+import CountryFlag from "./CountryFlag";
 
 interface IAvatarDropdownProps {
-  userId: string;
   onLogout: () => void;
 }
 
-export function AvatarDropdown({ userId, onLogout }: IAvatarDropdownProps) {
+export function AvatarDropdown({ onLogout }: IAvatarDropdownProps) {
+  const { user } = useUser();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarFallback className="text-card-foreground cursor-pointer">{userId?.substring(0, 2).toUpperCase()}</AvatarFallback>
+          <AvatarFallback className="text-card-foreground cursor-pointer">{user.userId?.substring(0, 2).toUpperCase()}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="start">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel className="p-0 font-normal">
+          <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+            <Avatar className="h-8 w-8 rounded-lg">
+              <AvatarImage src={user.picture} alt={user.name} />
+              <AvatarFallback className="rounded-lg">{user.userId?.substring(0, 2).toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{user.name}</span>
+              <div className="flex items-center">
+                <span className="truncate text-xs">{user.userId}</span>
+                <CountryFlag code={user.country as string} className="scale-50"/>
+              </div>
+            </div>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>

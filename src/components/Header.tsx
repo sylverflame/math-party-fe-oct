@@ -3,6 +3,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useNavigate } from "react-router";
 import { AvatarDropdown } from "./AvatarDropdown";
 import { Button } from "./ui/button";
+import CountryFlag from "./CountryFlag";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -31,8 +32,9 @@ const Header = () => {
       <Button className="hidden" onClick={onToggleFullScreen}>
         {"FS"}
       </Button>
-      <div className="flex items-center gap-6">
-        <AvatarDropdown userId={userId} onLogout={onLogout} />
+      <div className="flex items-center gap-2 relative">
+        <CountryFlag code="IN" className="absolute -right-4 -top-2 scale-50 z-2" />
+        <AvatarDropdown onLogout={onLogout} />
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ export const oAuthLoginResponseSchema = z.object({
   user: z.object({
     userId: z.string(),
     id: z.number(),
+    picture: z.string(),
+    name: z.string(),
     country: z.string().max(3).optional(),
   }),
   accessToken: z.string(),

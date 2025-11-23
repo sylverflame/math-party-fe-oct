@@ -1,7 +1,7 @@
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useUser } from "@/contexts/UserContext";
+import { useUser, type User } from "@/contexts/UserContext";
 import { useForm, type FieldValues, type Path, type RegisterOptions, type SubmitErrorHandler, type SubmitHandler } from "react-hook-form";
 import { Navigate } from "react-router";
 
@@ -32,7 +32,7 @@ const validations: ValidationSchema<LoginForm> = {
   },
 };
 
- const Login = () => {
+const Login = () => {
   const {
     user: { userId },
     login,
@@ -53,7 +53,7 @@ const validations: ValidationSchema<LoginForm> = {
     // TODO: Authenticate user
 
     // After authentication
-    const userObj = { userId: username };
+    const userObj: User = { userId: username, id: 0 };
     login(userObj);
   };
 
