@@ -1,7 +1,8 @@
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useUser, type User } from "@/contexts/UserContext";
+import { useUser } from "@/contexts/UserContext";
+import type { User } from "@/schemas";
 import { useForm, type FieldValues, type Path, type RegisterOptions, type SubmitErrorHandler, type SubmitHandler } from "react-hook-form";
 import { Navigate } from "react-router";
 

@@ -1,12 +1,5 @@
+import type { User } from "@/schemas";
 import { createContext, useContext, useState } from "react";
-
-export type User = {
-  id: number | null;
-  userId: string | null;
-  picture?: string;
-  name?: string;
-  country?: string;
-};
 
 type UserContextType = {
   user: User;
