@@ -3,13 +3,14 @@ import * as Flags from "country-flag-icons/react/3x2";
 
 interface ICountryFlag {
   code: string;
-  className?: string
+  className?: string;
 }
 
 const CountryFlag = ({ code, className }: ICountryFlag) => {
-  const Flag = (Flags as Record<string, React.ComponentType<{ className?: string }>>)[code.toUpperCase()];
-
-  if (!Flag) return null;
+  if(!code) return null
+  const Flag = (Flags as Record<string, React.ComponentType<{ className?: string }>>)[code.substring(0, 2).toUpperCase()];
+ 
+ if (!Flag) return null;
 
   return <Flag className={cn("w-9 h-6 rounded-sm", className)} />;
 };

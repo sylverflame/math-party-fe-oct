@@ -20,18 +20,22 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : { id: null, userId: null };
   });
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(() => {
+    const stored = localStorage.getItem("user");
+    return stored ? true : false;
+  });
 
   const login = (user: User) => {
     setUser(user);
-    setIsUserLoggedIn(false)
+    setIsUserLoggedIn(true);
     localStorage.setItem("user", JSON.stringify(user));
   };
 
   const logout = () => {
     setUser({ id: null, userId: null });
-    setIsUserLoggedIn(false)
+    setIsUserLoggedIn(false);
     localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
   };
   return <Provider value={{ user, isUserLoggedIn, login, logout }}>{children}</Provider>;
 };
