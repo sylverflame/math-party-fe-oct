@@ -8,7 +8,7 @@ import CountryFlag from "./CountryFlag";
 const Header = () => {
   const navigate = useNavigate();
   const {
-    user: { userId },
+    isUserLoggedIn,
     logout,
   } = useUser();
   const onLogout = () => {
@@ -22,7 +22,7 @@ const Header = () => {
       document.exitFullscreen();
     }
   };
-  if (!userId) {
+  if (!isUserLoggedIn) {
     return null;
   }
   return (

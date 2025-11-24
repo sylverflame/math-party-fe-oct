@@ -6,11 +6,9 @@ type ProtectRouteProps = {
 };
 
 const ProtectedRoute = ({ element }: ProtectRouteProps) => {
-  const {
-    user: { userId },
-  } = useUser();
+  const { isUserLoggedIn } = useUser();
 
-  if (!userId) {
+  if (!isUserLoggedIn) {
     return <Navigate to="/" />;
   }
   return element;

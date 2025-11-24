@@ -13,6 +13,7 @@ import Logout from "@/assets/logout.svg?react";
 import ThemeToggle from "./ThemeToggle";
 import { useUser } from "@/contexts/UserContext";
 import CountryFlag from "./CountryFlag";
+import { useNavigate } from "react-router";
 
 interface IAvatarDropdownProps {
   onLogout: () => void;
@@ -20,6 +21,7 @@ interface IAvatarDropdownProps {
 
 export function AvatarDropdown({ onLogout }: IAvatarDropdownProps) {
   const { user } = useUser();
+  const navigate = useNavigate()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -44,7 +46,7 @@ export function AvatarDropdown({ onLogout }: IAvatarDropdownProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate("/app/user-profile")}>Profile</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

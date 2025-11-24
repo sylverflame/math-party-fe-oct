@@ -9,6 +9,7 @@ import GameWithProviders from "./components/GameWithProviders";
 import GlobalSpinner from "./components/GlobalSpinner";
 import SW from "./components/SuspenseWrapper";
 import AppLayout from "./layouts/AppLayout";
+import UserProfile from "./components/UserProfile";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/LoginOAuth"));
@@ -24,6 +25,7 @@ function App() {
         <Route path="app" element={<ProtectedRoute element={<AppLayout />} />}>
           <Route path="home" element={<EBW children={<SW component={Home} />} />} />
           <Route path="game" element={<GameWithProviders />} />
+          <Route path="user-profile" element={<UserProfile />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
