@@ -1,6 +1,6 @@
 import z from "zod";
 
-const UserSchema = z.object({
+export const UserSchema = z.object({
   userId: z.string().nullable(),
   id: z.number().nullable(),
   picture: z.string().optional(),
@@ -12,6 +12,9 @@ export const oAuthLoginResponseSchema = z.object({
   isValidUser: z.boolean(),
   user: UserSchema,
   accessToken: z.string(),
+});
+export const UpdateUserResponseSchema = z.object({
+  message: z.string(),
 });
 
 export type User = z.infer<typeof UserSchema>;

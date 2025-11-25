@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestHeaders } from "axios";
+import { toast } from "sonner";
 
 const instance = axios.create({
   withCredentials: true,
@@ -7,7 +8,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   (config) => {
     config.headers = {
-      Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+      Authorization: `Bearer ${sessionStorage.getItem("token") || ""}`,
     } as AxiosRequestHeaders;
     return config;
   },
@@ -15,4 +16,28 @@ instance.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+instance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      if (error.response.status === 401) {
+        if (error.response.data.errorCode === "ERR_012") {
+          toast.error("Token Expired. Please login again.")
+        }
+      }
+      if (error.response.status === 403) {
+        console.log("Forbidden");
+      }
+    } else if (error.request) {
+      console.error("Network Error:", error.request);
+    } else {
+      console.error("Axios Error:", error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default instance;

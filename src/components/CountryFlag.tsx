@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import * as Flags from "country-flag-icons/react/3x2";
 
 interface ICountryFlag {
-  code: string;
+  code: string | null | undefined;
   className?: string;
 }
 

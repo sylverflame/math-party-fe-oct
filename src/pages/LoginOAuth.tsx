@@ -7,7 +7,7 @@ import { useSpinner } from "@/contexts/GlobalSpinnerContext";
 import { useUser } from "@/contexts/UserContext";
 import { oAuthLoginResponseSchema } from "@/schemas";
 import { useEffect } from "react";
-import { Navigate, useSearchParams } from "react-router";
+import { Navigate, useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 
 const LoginOAuth = () => {
@@ -15,6 +15,7 @@ const LoginOAuth = () => {
   const { userId } = user;
   const { showGlobalSpinner, hideGlobalSpinner } = useSpinner();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = searchParams.get("token");
@@ -27,7 +28,10 @@ const LoginOAuth = () => {
           sessionStorage.setItem("token", accessToken!);
           login(user);
           toast.success("Login successful!");
-          if (!user.userId) toast.success("Update user details!");
+          if (!user.userId) {
+            navigate("/login");
+            toast.success("Update user details!");
+          }
         }
       } catch (error) {
         console.error("Login Error -", error);
@@ -40,26 +44,34 @@ const LoginOAuth = () => {
     }
   }, []);
 
-  if (userId) {
-    return <Navigate to="app/home" />;
-  }
-
   const onLoginWithGoogle = () => {
     window.location.href = API_URLS.GOOGLE_AUTH;
   };
 
-  return (
-    <div className="login-page h-[100%] flex flex-col items-center justify-center p-6 w-full">
-      <Logo />
-      {!isUserLoggedIn && (
+  if (userId) {
+    return <Navigate to="app/home" />;
+  }
+
+  if (isUserLoggedIn && !userId) {
+    return (
+      <div className="login-page h-[100%] flex flex-col items-center justify-center p-6 w-full">
+        <Logo />
+        <UpdateUserIdCountry />
+      </div>
+    );
+  }
+
+  if (!isUserLoggedIn) {
+    return (
+      <div className="login-page h-[100%] flex flex-col items-center justify-center p-6 w-full">
+        <Logo />
         <Button variant="outline" className="flex items-center gap-2 mt-10" onClick={onLoginWithGoogle}>
           <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
           <span>{"Sign in with Google"}</span>
         </Button>
-      )}
-      {isUserLoggedIn && !userId && <UpdateUserIdCountry />}
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 export default LoginOAuth;

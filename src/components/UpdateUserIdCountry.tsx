@@ -1,10 +1,14 @@
-import { Controller, useForm, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { updateData } from "@/api/methods";
+import { API_URLS } from "@/api/urls";
 import { COUNTRIES } from "@/config/constants";
-import CountryFlag from "./CountryFlag";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { useUser } from "@/contexts/UserContext";
+import { UserSchema } from "@/schemas";
+import { Controller, useForm, type FieldValues, type Path, type RegisterOptions } from "react-hook-form";
+import { toast } from "sonner";
+import CountryFlag from "./CountryFlag";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 type UpdateUserForm = {
   username: string;
@@ -39,15 +43,28 @@ const UpdateUserIdCountry = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<UpdateUserForm>();
+  } = useForm<UpdateUserForm>({
+    defaultValues: {
+      country: "IN",
+    },
+  });
 
-  const {logout} = useUser()
+  const { logout, updateUser } = useUser();
 
-  const onUpdateUser = (data: UpdateUserForm) => {
-    console.log(data);
+  const onUpdateUser = async (data: UpdateUserForm) => {
+    const { username, country } = data;
+    try {
+      const response = await updateData(API_URLS.UPDATE_USER, { username, country });
+      const { userId } = UserSchema.parse(response.data.user);
+      updateUser({ userId, country });
+      toast.success("Update sucessful");
+    } catch (error) {
+      console.error(error)
+      toast.error("Update unsuccessful");
+    }
   };
   return (
-    <form className="update-user-form mt-2 w-[50%] min-w-[300px]" onSubmit={handleSubmit(onUpdateUser)}>
+    <form className="update-user-form mt-2 w-[50%] min-w-[300px] text-foreground" onSubmit={handleSubmit(onUpdateUser)}>
       <Input placeholder="Username" className="w-full" {...register("username", validations.username)} aria-invalid={errors.username ? "true" : "false"} />
       {errors.username && <div className="text-[10px] text-red-600 mt-1 w-full">{errors.username.message}</div>}
       {/* <Input placeholder="Password" type="password" className="mt-2" {...register("country", validations.country)} aria-invalid={errors.country ? "true" : "false"} />

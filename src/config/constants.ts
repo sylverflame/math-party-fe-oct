@@ -250,7 +250,6 @@ export const COUNTRIES = [
     { value: 'VI', label: 'Virgin Islands, U.S.' },
     { value: 'WF', label: 'Wallis And Futuna' },
     { value: 'EH', label: 'Western Sahara' },
-    { value: 'WO', label: 'World' },
     { value: 'YE', label: 'Yemen' },
     { value: 'ZM', label: 'Zambia' },
     { value: 'ZW', label: 'Zimbabwe' },

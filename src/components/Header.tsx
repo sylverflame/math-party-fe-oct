@@ -10,6 +10,7 @@ const Header = () => {
   const {
     isUserLoggedIn,
     logout,
+    user
   } = useUser();
   const onLogout = () => {
     logout();
@@ -33,7 +34,7 @@ const Header = () => {
         {"FS"}
       </Button>
       <div className="flex items-center gap-2 relative">
-        <CountryFlag code="IN" className="absolute -right-4 -top-2 scale-50 z-2" />
+        <CountryFlag code={user.country} className="absolute -right-4 -top-2 scale-50 z-2" />
         <AvatarDropdown onLogout={onLogout} />
       </div>
     </div>

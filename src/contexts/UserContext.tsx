@@ -6,6 +6,7 @@ type UserContextType = {
   isUserLoggedIn: boolean;
   login: (user: User) => void;
   logout: () => void;
+  updateUser: (details: Partial<User>) => void
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -37,7 +38,16 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     localStorage.removeItem("user");
     sessionStorage.removeItem("token");
   };
-  return <Provider value={{ user, isUserLoggedIn, login, logout }}>{children}</Provider>;
+
+  const updateUser = (details: Partial<User>) => {
+    setUser((user) => {
+      return {
+        ...user,
+        ...details,
+      };
+    });
+  };
+  return <Provider value={{ user, isUserLoggedIn, login, logout, updateUser }}>{children}</Provider>;
 };
 
 export const useUser = () => {
